@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plexuspules/features/auth/presentation/pages/login/login_page.dart';
 import 'package:plexuspules/features/dashboard/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:plexuspules/features/devices/presentation/pages/devices/devices_page.dart';
+import 'package:plexuspules/features/devices/presentation/pages/device_detail/device_detail_page.dart';
 import 'package:plexuspules/features/alerts/presentation/pages/alerts/alerts_page.dart';
 import 'package:plexuspules/features/profile/presentation/pages/profile/profile_page.dart';
 import 'package:plexuspules/core/navigation/navigation_shell_page.dart';
@@ -12,6 +13,7 @@ class AppRouter {
   static const String login = '/login';
   static const String dashboard = '/dashboard';
   static const String devices = '/devices';
+  static const String deviceDetail = '/device-detail/:id';
   static const String alerts = '/alerts';
   static const String profile = '/profile';
 
@@ -25,6 +27,13 @@ class AppRouter {
       GoRoute(
         path: login,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: deviceDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return DeviceDetailPage(deviceId: id);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
