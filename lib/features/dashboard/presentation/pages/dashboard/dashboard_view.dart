@@ -3,6 +3,7 @@ import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/stat_card.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/network_health_card.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/alert_item.dart';
+import 'package:plexuspules/core/widgets/common_app_bar.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -11,21 +12,14 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: CommonAppBar.brand(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(AppSizes.p20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Brand Logo Header
-              Center(
-                child: Image.asset(
-                  'assets/brand-logo-icon.png',
-                  height: AppSizes.p32,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              AppSizes.gap32,
+              // Stats Grid
 
               // Stats Grid
               GridView.count(
@@ -83,13 +77,10 @@ class DashboardView extends StatelessWidget {
                   Text(
                     'Recent Alerts',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('View All'),
-                  ),
+                  TextButton(onPressed: () {}, child: const Text('View All')),
                 ],
               ),
               AppSizes.gap16,
