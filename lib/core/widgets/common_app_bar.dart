@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 
-import 'package:plexuspules/config/theme/app_colors.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;

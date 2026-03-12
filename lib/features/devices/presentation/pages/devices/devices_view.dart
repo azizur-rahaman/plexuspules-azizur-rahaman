@@ -4,6 +4,8 @@ import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
 
+import 'package:plexuspules/core/widgets/common_search_bar.dart';
+
 class DevicesView extends StatefulWidget {
   const DevicesView({super.key});
 
@@ -21,35 +23,12 @@ class _DevicesViewState extends State<DevicesView> {
       appBar: CommonAppBar.brand(),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Search Bar
             Padding(
               padding: EdgeInsets.all(AppSizes.p20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppSizes.p12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search device or IP...',
-                    hintStyle: const TextStyle(color: AppColors.textMuted),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.p12),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(vertical: AppSizes.p16),
-                  ),
-                ),
-              ),
+              child: const CommonSearchBar(hintText: 'Search device or IP...'),
             ),
 
             // Filters
