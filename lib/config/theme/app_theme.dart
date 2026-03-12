@@ -16,7 +16,7 @@ class AppTheme {
         secondaryContainer: AppColors.splashGradientEnd,
       ),
       scaffoldBackgroundColor: AppColors.background,
-      
+
       // Text Theme
       textTheme: const TextTheme(
         displayLarge: TextStyle(color: AppColors.textPrimary),
@@ -35,7 +35,7 @@ class AppTheme {
         labelMedium: TextStyle(color: AppColors.textSecondary),
         labelSmall: TextStyle(color: AppColors.textMuted),
       ),
-      
+
       // App Bar Theme
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.surface,
@@ -63,9 +63,7 @@ class AppTheme {
       ),
 
       // Icon Theme
-      iconTheme: const IconThemeData(
-        color: AppColors.iconPrimary,
-      ),
+      iconTheme: const IconThemeData(color: AppColors.iconPrimary),
 
       // Elevated Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -73,21 +71,17 @@ class AppTheme {
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
-      
+
       // Outlined Button Theme
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
           side: const BorderSide(color: AppColors.primary),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),

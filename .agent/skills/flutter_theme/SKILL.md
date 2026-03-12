@@ -21,3 +21,24 @@ If a design requires a new color that is not currently available in the applicat
 
 If a design requires spacing, paddings, or standard dimensions (like `SizedBox(height: 8)` or `padding: EdgeInsets.all(16)`), you must use constants defined in `AppSizes` from `lib/core/constants/app_sizes.dart`. 
 For instance, use `AppSizes.gap8` instead of `SizedBox(height: 8)`, and `AppSizes.p16` instead of `16.0` for padding. If a required size standard is missing, define it inside `AppSizes` first.
+
+## Using Common Widgets
+
+You MUST check for and use existing common widgets located in `lib/core/widgets/` instead of reinventing the wheel (e.g., using a raw `ElevatedButton` when a `PrimaryButton` already exists). If a required common widget doesn't exist, you should create it in `lib/core/widgets/` for reusability.
+
+## Local Storage Strategy
+
+This project uses **two** storage solutions with strictly separated responsibilities. You MUST follow these rules on every feature you implement.
+
+| Storage | Class | Location | Use For |
+|---|---|---|---|
+| `flutter_secure_storage` | `SecureStorageService` | `lib/core/services/secure_storage_service.dart` | JWT tokens, credentials, any sensitive auth data |
+| `Hive` | `HiveService` | `lib/core/services/hive_service.dart` | Preferences, cached API responses, settings, all other local data |
+
+### Rules (MUST follow)
+
+- You MUST use `SecureStorageService` whenever storing JWT access tokens, refresh tokens, or user credentials.
+- You MUST use `HiveService` for **all** other local persistence (e.g., user preferences, cached dashboard data, feature flags, settings).
+- You MUST **NEVER** store tokens or passwords inside Hive.
+- You MUST **NEVER** use `SecureStorageService` for non-sensitive data.
+- When adding a new typed Hive model, create a `HiveObject` subclass and register its adapter in `HiveService.init()`.
