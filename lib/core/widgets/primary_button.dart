@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/app_sizes.dart';
 
@@ -24,13 +25,9 @@ class PrimaryButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
         ),
         child: isLoading
-            ? SizedBox(
-                height: AppSizes.font16 * 1.5,
-                width: AppSizes.font16 * 1.5,
-                child: const CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
+            ? LoadingAnimationWidget.horizontalRotatingDots(
+                color: Colors.white,
+                size: AppSizes.font16 * 2,
               )
             : Text(
                 text,
