@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
+import 'package:go_router/go_router.dart';
 
 enum DeviceStatus { online, offline }
 
@@ -24,8 +25,10 @@ class DeviceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isOnline = status == DeviceStatus.online;
 
-    return Container(
-      padding: EdgeInsets.all(AppSizes.p16),
+    return GestureDetector(
+      onTap: () => context.push('/device-detail/$name'),
+      child: Container(
+        padding: EdgeInsets.all(AppSizes.p16),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppSizes.p16),
@@ -134,6 +137,7 @@ class DeviceCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
