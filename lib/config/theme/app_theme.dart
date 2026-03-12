@@ -13,6 +13,7 @@ class AppTheme {
         primary: AppColors.primary,
         surface: AppColors.surface,
         error: AppColors.critical,
+        secondaryContainer: AppColors.splashGradientEnd,
       ),
       scaffoldBackgroundColor: AppColors.background,
       

@@ -46,4 +46,7 @@ class AppColors {
   static const Color incidentCritical = Color(0xFFEF4444);
   static const Color incidentWarning = Color(0xFFF59E0B);
   static const Color incidentFixed = Color(0xFF94A3B8);
+
+  /// Splash Colors
+  static const Color splashGradientEnd = Color(0xFFFFF2DD);
 }
