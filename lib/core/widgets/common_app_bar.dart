@@ -44,11 +44,14 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       leading: leading,
       elevation: elevation,
-      backgroundColor: backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
       shape: showBottomBorder
           ? Border(
               bottom: BorderSide(
-                color: AppColors.divider.withValues(alpha: 0.5),
+                color: Theme.of(
+                  context,
+                ).colorScheme.outlineVariant.withValues(alpha: 0.5),
                 width: 1,
               ),
             )
