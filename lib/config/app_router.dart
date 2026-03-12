@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:plexuspules/features/auth/presentation/pages/login/login_page.dart';
 import 'package:plexuspules/features/dashboard/presentation/pages/dashboard/dashboard_page.dart';
-import 'package:plexuspules/features/dashboard/presentation/pages/devices/devices_page.dart';
-import 'package:plexuspules/features/dashboard/presentation/pages/alerts/alerts_page.dart';
-import 'package:plexuspules/features/dashboard/presentation/pages/profile/profile_page.dart';
+import 'package:plexuspules/features/devices/presentation/pages/devices/devices_page.dart';
+import 'package:plexuspules/features/alerts/presentation/pages/alerts/alerts_page.dart';
+import 'package:plexuspules/features/profile/presentation/pages/profile/profile_page.dart';
 import 'package:plexuspules/core/navigation/navigation_shell_page.dart';
 import 'package:plexuspules/features/splash/presentation/pages/splash_screen.dart';
 
