@@ -1,17 +1,21 @@
-# plexuspules
+# PlexusPulse
 
-A new Flutter project.
+A Flutter project built with a **feature‑based Clean Architecture**.
 
-## Getting Started
+## Architecture Overview
 
-This project is a starting point for a Flutter application.
+This project follows Clean Architecture principles to ensure separation of concerns, high testability, and scalability.
 
-A few resources to get you started if this is your first Flutter project:
+Dependencies always flow **inward**: `Presentation → Domain → Data → External`
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### Layer Summary
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Presentation Layer**: Screens, Widgets, State Management (Riverpod / Bloc), Controllers / Providers.
+- **Domain Layer**: Entities, Use Cases, Repository Interfaces. *(Does not depend on Flutter, APIs, or databases)*
+- **Data Layer**: Repository Implementations, Models, Remote/Local Data Sources.
+- **External Services**: REST API, WebSocket, Local Database (Hive/SQLite), Firebase.
+
+For full architectural details and diagrams, please see:
+- [Clean Architecture Overview](docs/plexuspulse_clean_architecture.md)
+
+![Architecture Component Diagram](docs/architechture.svg)
