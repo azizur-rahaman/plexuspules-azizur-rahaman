@@ -250,7 +250,7 @@ class _LoginViewState extends State<_LoginView>
                                 GestureDetector(
                                   onTap: () {},
                                   child: Text(
-                                    'Forgot?',
+                                    'Forgot Password?',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall

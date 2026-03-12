@@ -25,3 +25,18 @@ For instance, use `AppSizes.gap8` instead of `SizedBox(height: 8)`, and `AppSize
 ## Using Common Widgets
 
 You MUST check for and use existing common widgets located in `lib/core/widgets/` instead of reinventing the wheel (e.g., using a raw `ElevatedButton` when a `PrimaryButton` already exists). If a required common widget doesn't exist, you should create it in `lib/core/widgets/` for reusability.
+
+## Local Storage Strategy
+
+This project uses **two** storage solutions with distinct responsibilities. **Never mix them.**
+
+| Storage | Class | Use For |
+|---|---|---|
+| `flutter_secure_storage` | `SecureStorageService` | Auth credentials, JWT tokens — anything sensitive |
+| `Hive` | `HiveService` | General local data: preferences, cached API responses, settings |
+
+- Use `HiveService` (in `lib/core/services/hive_service.dart`) for all non-sensitive local persistence.
+- Use `SecureStorageService` (in `lib/core/services/secure_storage_service.dart`) **only** for tokens/auth data.
+- For new Hive typed models, create a `HiveObject` subclass and register its adapter in `HiveService.init()`.
+- **Never store tokens or passwords inside Hive.**
+
