@@ -28,15 +28,17 @@ You MUST check for and use existing common widgets located in `lib/core/widgets/
 
 ## Local Storage Strategy
 
-This project uses **two** storage solutions with distinct responsibilities. **Never mix them.**
+This project uses **two** storage solutions with strictly separated responsibilities. You MUST follow these rules on every feature you implement.
 
-| Storage | Class | Use For |
-|---|---|---|
-| `flutter_secure_storage` | `SecureStorageService` | Auth credentials, JWT tokens — anything sensitive |
-| `Hive` | `HiveService` | General local data: preferences, cached API responses, settings |
+| Storage | Class | Location | Use For |
+|---|---|---|---|
+| `flutter_secure_storage` | `SecureStorageService` | `lib/core/services/secure_storage_service.dart` | JWT tokens, credentials, any sensitive auth data |
+| `Hive` | `HiveService` | `lib/core/services/hive_service.dart` | Preferences, cached API responses, settings, all other local data |
 
-- Use `HiveService` (in `lib/core/services/hive_service.dart`) for all non-sensitive local persistence.
-- Use `SecureStorageService` (in `lib/core/services/secure_storage_service.dart`) **only** for tokens/auth data.
-- For new Hive typed models, create a `HiveObject` subclass and register its adapter in `HiveService.init()`.
-- **Never store tokens or passwords inside Hive.**
+### Rules (MUST follow)
 
+- You MUST use `SecureStorageService` whenever storing JWT access tokens, refresh tokens, or user credentials.
+- You MUST use `HiveService` for **all** other local persistence (e.g., user preferences, cached dashboard data, feature flags, settings).
+- You MUST **NEVER** store tokens or passwords inside Hive.
+- You MUST **NEVER** use `SecureStorageService` for non-sensitive data.
+- When adding a new typed Hive model, create a `HiveObject` subclass and register its adapter in `HiveService.init()`.
