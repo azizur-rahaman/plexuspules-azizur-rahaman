@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plexuspules/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:plexuspules/features/auth/presentation/bloc/login_event.dart';
+import 'package:plexuspules/features/auth/presentation/bloc/login_state.dart';
+import 'package:plexuspules/features/auth/presentation/widgets/login_email_field.dart';
+import 'package:plexuspules/features/auth/presentation/widgets/login_footer.dart';
+import 'package:plexuspules/features/auth/presentation/widgets/login_header.dart';
+import 'package:plexuspules/features/auth/presentation/widgets/login_password_field.dart';
+import 'package:plexuspules/features/dashboard/presentation/pages/dashboard_page.dart';
 
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/widgets/primary_button.dart';
-import '../../../../dashboard/presentation/pages/dashboard_page.dart';
-import '../../bloc/login_bloc.dart';
-import '../../bloc/login_event.dart';
-import '../../bloc/login_state.dart';
-import '../../widgets/login_email_field.dart';
-import '../../widgets/login_footer.dart';
-import '../../widgets/login_header.dart';
-import '../../widgets/login_password_field.dart';
+import '../../../../../../core/constants/app_sizes.dart';
+import '../../../../../../core/widgets/primary_button.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
