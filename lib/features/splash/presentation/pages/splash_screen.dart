@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,8 +15,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // In a real app, you would check auth state or initialize services here
-    // before navigating to the next screen.
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginPage()));
+      }
+    });
   }
 
   @override

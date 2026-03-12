@@ -21,3 +21,7 @@ If a design requires a new color that is not currently available in the applicat
 
 If a design requires spacing, paddings, or standard dimensions (like `SizedBox(height: 8)` or `padding: EdgeInsets.all(16)`), you must use constants defined in `AppSizes` from `lib/core/constants/app_sizes.dart`. 
 For instance, use `AppSizes.gap8` instead of `SizedBox(height: 8)`, and `AppSizes.p16` instead of `16.0` for padding. If a required size standard is missing, define it inside `AppSizes` first.
+
+## Using Common Widgets
+
+You MUST check for and use existing common widgets located in `lib/core/widgets/` instead of reinventing the wheel (e.g., using a raw `ElevatedButton` when a `PrimaryButton` already exists). If a required common widget doesn't exist, you should create it in `lib/core/widgets/` for reusability.
