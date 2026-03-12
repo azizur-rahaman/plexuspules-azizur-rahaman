@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:plexuspules/config/app_router.dart';
+import 'package:plexuspules/core/di/injection.dart';
+import 'package:plexuspules/features/auth/domain/repositories/auth_repository.dart';
 import '../../../../core/constants/app_sizes.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,15 +14,25 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        context.go(AppRouter.login);
-      }
-    });
+    _checkAuthentication();
+  }
+
+  Future<void> _checkAuthentication() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final authRepository = getIt<AuthRepository>();
+    final result = await authRepository.getCachedToken();
+
+    result.fold(
+      (failure) => context.go(AppRouter.login),
+      (token) => context.go(AppRouter.dashboard),
+    );
   }
 
   @override
