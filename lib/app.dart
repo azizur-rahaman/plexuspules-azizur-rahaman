@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/theme/app_theme.dart';
-import 'features/splash/presentation/pages/splash_screen.dart';
+import 'config/app_router.dart';
 
 class PlexusPulseApp extends StatelessWidget {
   const PlexusPulseApp({super.key});
@@ -14,11 +14,11 @@ class PlexusPulseApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'Plexus Pulse',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          home: const SplashScreen(),
+          routerConfig: AppRouter.router,
         );
       },
     );
