@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 
@@ -67,7 +68,7 @@ class PerformanceGraph extends StatelessWidget {
           ),
           AppSizes.gap32,
           SizedBox(
-            height: 120,
+            height: 160.h,
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,

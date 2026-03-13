@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
@@ -206,7 +207,7 @@ class _FilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onSelect,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary

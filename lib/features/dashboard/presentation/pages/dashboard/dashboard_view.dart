@@ -63,43 +63,50 @@ class _DashboardViewState extends State<DashboardView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Stats Grid
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: AppSizes.p16,
-                      crossAxisSpacing: AppSizes.p16,
-                      childAspectRatio: 1.1,
-                      children: [
-                        StatCard(
-                          title: 'TOTAL',
-                          value: metrics.totalDevices.toString(),
-                          subtitle: 'Total connected devices',
-                          icon: Icons.inventory_2_outlined,
-                          color: Colors.blue,
-                        ),
-                        StatCard(
-                          title: 'ONLINE',
-                          value: metrics.onlineDevices.toString(),
-                          subtitle: 'Currently active',
-                          icon: Icons.cloud_done_outlined,
-                          color: Colors.green,
-                        ),
-                        StatCard(
-                          title: 'OFFLINE',
-                          value: metrics.offlineDevices.toString(),
-                          subtitle: 'Action required',
-                          icon: Icons.cloud_off_outlined,
-                          color: Colors.red,
-                        ),
-                        StatCard(
-                          title: 'ALERTS',
-                          value: metrics.alerts.toString(),
-                          subtitle: 'Open issues',
-                          icon: Icons.warning_amber_outlined,
-                          color: Colors.orange,
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final crossAxisCount = constraints.maxWidth > 600 ? 4 : 2;
+                        final childAspectRatio = constraints.maxWidth > 600 ? 1.3 : 1.1;
+                        
+                        return GridView.count(
+                          crossAxisCount: crossAxisCount,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          mainAxisSpacing: AppSizes.p16,
+                          crossAxisSpacing: AppSizes.p16,
+                          childAspectRatio: childAspectRatio,
+                          children: [
+                            StatCard(
+                              title: 'TOTAL',
+                              value: metrics.totalDevices.toString(),
+                              subtitle: 'Total connected devices',
+                              icon: Icons.inventory_2_outlined,
+                              color: Colors.blue,
+                            ),
+                            StatCard(
+                              title: 'ONLINE',
+                              value: metrics.onlineDevices.toString(),
+                              subtitle: 'Currently active',
+                              icon: Icons.cloud_done_outlined,
+                              color: Colors.green,
+                            ),
+                            StatCard(
+                              title: 'OFFLINE',
+                              value: metrics.offlineDevices.toString(),
+                              subtitle: 'Action required',
+                              icon: Icons.cloud_off_outlined,
+                              color: Colors.red,
+                            ),
+                            StatCard(
+                              title: 'ALERTS',
+                              value: metrics.alerts.toString(),
+                              subtitle: 'Open issues',
+                              icon: Icons.warning_amber_outlined,
+                              color: Colors.orange,
+                            ),
+                          ],
+                        );
+                      }
                     ),
                     AppSizes.gap32,
 

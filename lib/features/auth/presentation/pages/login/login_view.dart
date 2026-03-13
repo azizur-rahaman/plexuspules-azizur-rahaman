@@ -164,44 +164,49 @@ class _LoginFormSheet extends StatelessWidget {
             AppSizes.p32,
             AppSizes.p40 + MediaQuery.of(context).padding.bottom,
           ),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome back',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    AppSizes.gap32,
+    
+                    LoginEmailField(controller: emailController),
+                    AppSizes.gap24,
+    
+                    LoginPasswordField(
+                      controller: passwordController,
+                      onSubmitted: onLoginPressed,
+                    ),
+                    AppSizes.gap32,
+    
+                    // Sign In Button — watches BLoC for loading state
+                    BlocBuilder<LoginBloc, LoginState>(
+                      builder: (context, state) {
+                        return PrimaryButton(
+                          text: 'Sign In',
+                          isLoading: state is LoginLoading,
+                          onPressed: onLoginPressed,
+                        );
+                      },
+                    ),
+                    AppSizes.gap24,
+    
+                    LoginFooter(onCreateAccount: () {}),
+                  ],
                 ),
-                AppSizes.gap32,
-
-                LoginEmailField(controller: emailController),
-                AppSizes.gap24,
-
-                LoginPasswordField(
-                  controller: passwordController,
-                  onSubmitted: onLoginPressed,
-                ),
-                AppSizes.gap32,
-
-                // Sign In Button — watches BLoC for loading state
-                BlocBuilder<LoginBloc, LoginState>(
-                  builder: (context, state) {
-                    return PrimaryButton(
-                      text: 'Sign In',
-                      isLoading: state is LoginLoading,
-                      onPressed: onLoginPressed,
-                    );
-                  },
-                ),
-                AppSizes.gap24,
-
-                LoginFooter(onCreateAccount: () {}),
-              ],
+              ),
             ),
           ),
         ),

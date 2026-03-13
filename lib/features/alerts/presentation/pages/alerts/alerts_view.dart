@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/alerts/presentation/bloc/alerts_bloc.dart';
 import 'package:plexuspules/features/alerts/presentation/bloc/alerts_event.dart';
@@ -84,8 +85,8 @@ class _AlertsViewState extends State<AlertsView> {
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 6,
-                                      height: 6,
+                                      width: 6.r,
+                                      height: 6.r,
                                       decoration: const BoxDecoration(
                                         color: AppColors.primary,
                                         shape: BoxShape.circle,
