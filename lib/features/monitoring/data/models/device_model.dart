@@ -5,10 +5,6 @@ part 'device_model.g.dart';
 
 @JsonSerializable()
 class DeviceModel extends Device {
-  @JsonKey(name: 'lastPing')
-  @override
-  final DateTime lastSeen;
-
   const DeviceModel({
     required super.id,
     required super.name,
@@ -16,7 +12,7 @@ class DeviceModel extends Device {
     required super.status,
     required super.location,
     required super.ipAddress,
-    required this.lastSeen,
+    @JsonKey(name: 'lastPing') required DateTime lastSeen,
     super.cpuUsage,
     super.memoryUsage,
     super.performanceHistory,

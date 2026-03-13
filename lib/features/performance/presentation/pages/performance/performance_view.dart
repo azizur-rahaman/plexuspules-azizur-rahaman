@@ -1,6 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
+import 'package:plexuspules/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:plexuspules/features/dashboard/presentation/bloc/dashboard_state.dart';
 
 class PerformanceView extends StatelessWidget {
   const PerformanceView({super.key});
@@ -12,77 +15,58 @@ class PerformanceView extends StatelessWidget {
     return Scaffold(
       appBar: CommonAppBar.brand(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Performance Analytics',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
+        child: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            if (state is DashboardLoading && (state is! DashboardLoaded)) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is DashboardError) {
+              return Center(child: Text('Error: ${state.message}'));
+            }
+
+            if (state is DashboardLoaded) {
+              final metrics = state.metrics;
+              final history = metrics.performanceHistory ?? [];
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Performance Analytics',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Real-time system health monitoring',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    _buildChartCard(
+                      context: context,
+                      title: 'OVERALL PERFORMANCE',
+                      value: '${((metrics.cpuUsage + metrics.memoryUsage) / 2).toStringAsFixed(1)}%',
+                      change: 'System-wide',
+                      isPositive: metrics.alerts == 0,
+                      chartColor: theme.colorScheme.primary,
+                      spots: history.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
+                      maxY: 100,
+                      yInterval: 25,
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Real-time system health monitoring',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                ),
-              ),
-              const SizedBox(height: 32),
-              _buildChartCard(
-                context: context,
-                title: 'CPU USAGE',
-                value: '42.8%',
-                change: '-2.4%',
-                isPositive: false,
-                chartColor: const Color(0xFF3B82F6),
-                spots: [
-                  const FlSpot(0, 20),
-                  const FlSpot(2, 25),
-                  const FlSpot(4, 15),
-                  const FlSpot(6, 45),
-                  const FlSpot(8, 38),
-                  const FlSpot(10, 58),
-                  const FlSpot(12, 52),
-                  const FlSpot(14, 70),
-                  const FlSpot(16, 62),
-                  const FlSpot(18, 85),
-                  const FlSpot(20, 75),
-                ],
-                maxY: 100,
-                yInterval: 50,
-              ),
-              const SizedBox(height: 24),
-              _buildChartCard(
-                context: context,
-                title: 'MEMORY USAGE',
-                value: '6.4 GB',
-                change: '+0.8%',
-                isPositive: true,
-                chartColor: const Color(0xFF10B981),
-                spots: [
-                  const FlSpot(0, 4),
-                  const FlSpot(2, 5),
-                  const FlSpot(4, 6),
-                  const FlSpot(6, 4.5),
-                  const FlSpot(8, 7),
-                  const FlSpot(10, 8),
-                  const FlSpot(12, 9),
-                  const FlSpot(14, 8.5),
-                  const FlSpot(16, 9.5),
-                  const FlSpot(18, 10),
-                  const FlSpot(20, 10.5),
-                ],
-                maxY: 16,
-                yInterval: 8,
-                yLabel: (val) => '${val.toInt()}GB',
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
@@ -163,7 +147,7 @@ class PerformanceView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           SizedBox(
-            height: 160,
+            height: 240, // Increased height for a more prominent graph
             child: LineChart(
               LineChartData(
                 gridData: FlGridData(
@@ -190,30 +174,12 @@ class PerformanceView extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 30,
-                      interval: 6,
+                      interval: spots.isNotEmpty ? (spots.length / 4).ceilToDouble() : 1,
                       getTitlesWidget: (value, meta) {
-                        String text = '';
-                        switch (value.toInt()) {
-                          case 0:
-                            text = '00:00';
-                            break;
-                          case 6:
-                            text = '06:00';
-                            break;
-                          case 12:
-                            text = '12:00';
-                            break;
-                          case 18:
-                            text = '18:00';
-                            break;
-                          case 20:
-                            text = 'Now';
-                            break;
-                        }
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            text,
+                            '${value.toInt()}m',
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                               fontSize: 10,
@@ -242,22 +208,22 @@ class PerformanceView extends StatelessWidget {
                 ),
                 borderData: FlBorderData(show: false),
                 minX: 0,
-                maxX: 20,
+                maxX: spots.isNotEmpty ? (spots.length - 1).toDouble() : 10,
                 minY: 0,
                 maxY: maxY,
                 lineBarsData: [
                   LineChartBarData(
-                    spots: spots,
+                    spots: spots.isEmpty ? [const FlSpot(0, 0)] : spots,
                     isCurved: true,
                     color: chartColor,
-                    barWidth: 3,
+                    barWidth: 4,
                     isStrokeCapRound: true,
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          chartColor.withValues(alpha: 0.2),
+                          chartColor.withValues(alpha: 0.3),
                           chartColor.withValues(alpha: 0),
                         ],
                         begin: Alignment.topCenter,
