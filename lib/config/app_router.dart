@@ -35,6 +35,10 @@ class AppRouter {
           return DeviceDetailPage(deviceId: id);
         },
       ),
+      GoRoute(
+        path: alerts,
+        builder: (context, state) => const AlertsPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return NavigationShellPage(navigationShell: navigationShell);
@@ -53,14 +57,6 @@ class AppRouter {
               GoRoute(
                 path: devices,
                 builder: (context, state) => const DevicesPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: alerts,
-                builder: (context, state) => const AlertsPage(),
               ),
             ],
           ),

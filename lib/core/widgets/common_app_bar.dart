@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:plexuspules/config/app_router.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 
 
@@ -11,6 +13,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final bool showBottomBorder;
 
+  final bool hideAlerts;
+
   const CommonAppBar({
     super.key,
     this.title,
@@ -20,13 +24,19 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.elevation = 0,
     this.backgroundColor,
     this.showBottomBorder = true,
+    this.hideAlerts = false,
   });
 
   /// Factory constructor for the Brand Identity AppBar used in Dashboard
-  factory CommonAppBar.brand({Key? key, bool showBottomBorder = true}) {
+  factory CommonAppBar.brand({
+    Key? key,
+    bool showBottomBorder = true,
+    bool hideAlerts = false,
+  }) {
     return CommonAppBar(
       key: key,
       showBottomBorder: showBottomBorder,
+      hideAlerts: hideAlerts,
       title: Image.asset(
         'assets/brand-logo-icon.png',
         height: AppSizes.p32,
@@ -40,7 +50,15 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: title,
       centerTitle: centerTitle,
-      actions: actions,
+      actions: actions ??
+          (!hideAlerts
+              ? [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () => context.push(AppRouter.alerts),
+                  ),
+                ]
+              : null),
       leading: leading,
       elevation: elevation,
       backgroundColor:

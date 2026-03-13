@@ -10,10 +10,7 @@ import 'package:plexuspules/features/devices/presentation/widgets/throughput_cha
 class DeviceDetailView extends StatelessWidget {
   final String deviceId;
 
-  const DeviceDetailView({
-    super.key,
-    required this.deviceId,
-  });
+  const DeviceDetailView({super.key, required this.deviceId});
 
   @override
   Widget build(BuildContext context) {
