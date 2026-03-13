@@ -14,6 +14,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/alerts/data/datasources/alerts_remote_data_source.dart'
+    as _i956;
+import '../../features/alerts/data/repositories/alerts_repository_impl.dart'
+    as _i56;
+import '../../features/alerts/domain/repositories/alerts_repository.dart'
+    as _i7;
+import '../../features/alerts/domain/usecases/get_alerts.dart' as _i406;
+import '../../features/alerts/presentation/bloc/alerts_bloc.dart' as _i24;
 import '../../features/auth/data/datasources/auth_local_data_source.dart'
     as _i852;
 import '../../features/auth/data/datasources/auth_remote_data_source.dart'
@@ -98,6 +106,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i107.AuthRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
+    gh.lazySingleton<_i956.AlertsRemoteDataSource>(
+      () => _i956.AlertsRemoteDataSourceImpl(gh<_i667.DioClient>()),
+    );
     gh.lazySingleton<_i847.ProfileRemoteDataSource>(
       () => _i847.ProfileRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
@@ -109,6 +120,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i852.AuthLocalDataSource>(
       () => _i852.AuthLocalDataSourceImpl(gh<_i535.SecureStorageService>()),
+    );
+    gh.lazySingleton<_i7.AlertsRepository>(
+      () => _i56.AlertsRepositoryImpl(gh<_i956.AlertsRemoteDataSource>()),
     );
     gh.lazySingleton<_i629.PerformanceRemoteDataSource>(
       () => _i629.PerformanceRemoteDataSourceImpl(gh<_i667.DioClient>()),
@@ -133,6 +147,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i932.NetworkInfo>(),
       ),
     );
+    gh.lazySingleton<_i406.GetAlerts>(
+      () => _i406.GetAlerts(gh<_i7.AlertsRepository>()),
+    );
     gh.factory<_i469.ProfileBloc>(
       () => _i469.ProfileBloc(gh<_i894.ProfileRepository>()),
     );
@@ -156,6 +173,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i652.DashboardBloc>(
       () => _i652.DashboardBloc(gh<_i639.GetDashboardMetrics>()),
     );
+    gh.factory<_i24.AlertsBloc>(() => _i24.AlertsBloc(gh<_i406.GetAlerts>()));
     gh.factory<_i990.LoginBloc>(
       () => _i990.LoginBloc(gh<_i188.LoginUseCase>()),
     );
