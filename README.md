@@ -41,6 +41,17 @@ The project follows a **Feature-First Clean Architecture** pattern, ensuring hig
 -   **Data Layer**: Responsible for data retrieval. Includes Models (JSON-serializable entities), Data Sources (Remote API/Local DB), and Repository implementations.
 -   **Presentation Layer**: Responsible for the UI. Includes **BLoCs** for state management, **Pages** for routing entry, **Views** for layout, and **Widgets** for atomic UI components.
 -   **Core Layer**: Houses shared utilities such as custom network clients, error handling (Failures/Exceptions), and global constants.
+    
+## 🌳 Branching Strategy
+
+The project utilizes a feature-based branching workflow to maintain code stability and support continuous integration.
+
+-   **\`main\`**: Production-grade branch. Always reflects the latest stable Release (e.g., v1.0.0).
+-   **\`dev\`**: Integration branch for features. All completed tasks are merged here for final staging and verification.
+-   **\`feature/*\`**: Scoped branches for specific implementations:
+    -   \`feature/api-integration\`: Backend connectivity, FCM, and Responsive UI.
+    -   \`feature/initial-ui\`: Prototype design and navigation setup.
+    -   \`feature/authentication\`: Security protocols and session management.
 
 ## 📁 Folder Structure
 
