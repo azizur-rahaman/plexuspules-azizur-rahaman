@@ -156,6 +156,7 @@ class _DevicesViewState extends State<DevicesView> {
                       if (index < state.devices.length) {
                         final device = state.devices[index];
                         return DeviceCard(
+                          id: device.id,
                           name: device.name,
                           ipAddress: device.ipAddress,
                           location: device.location,

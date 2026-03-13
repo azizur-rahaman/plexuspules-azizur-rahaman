@@ -4,11 +4,20 @@ import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 
 class PerformanceGraph extends StatelessWidget {
-  const PerformanceGraph({super.key});
+  final List<double>? history;
+  final String title;
+
+  const PerformanceGraph({
+    super.key,
+    this.history,
+    this.title = 'Performance',
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final data = history ?? [0.3, 0.5, 0.4, 0.2, 0.6, 0.7, 0.8, 0.4, 0.5, 0.3, 0.8, 0.5];
+
     return Container(
       padding: EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
@@ -34,7 +43,7 @@ class PerformanceGraph extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Performance',
+                title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -62,14 +71,14 @@ class PerformanceGraph extends StatelessWidget {
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceAround,
-                maxY: 1,
+                maxY: 100, // Assuming percentage
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
                     getTooltipColor: (_) => theme.colorScheme.primaryContainer,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
-                        '${(rod.toY * 100).round()}%',
+                        '${rod.toY.round()}%',
                         TextStyle(
                           color: theme.colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.bold,
@@ -81,20 +90,9 @@ class PerformanceGraph extends StatelessWidget {
                 titlesData: const FlTitlesData(show: false),
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
-                barGroups: [
-                  _makeGroupData(context, 0, 0.3),
-                  _makeGroupData(context, 1, 0.5),
-                  _makeGroupData(context, 2, 0.4),
-                  _makeGroupData(context, 3, 0.2),
-                  _makeGroupData(context, 4, 0.6),
-                  _makeGroupData(context, 5, 0.7),
-                  _makeGroupData(context, 6, 0.8),
-                  _makeGroupData(context, 7, 0.4),
-                  _makeGroupData(context, 8, 0.5),
-                  _makeGroupData(context, 9, 0.3),
-                  _makeGroupData(context, 10, 0.8),
-                  _makeGroupData(context, 11, 0.5),
-                ],
+                barGroups: data.asMap().entries.map((e) {
+                  return _makeGroupData(context, e.key, e.value);
+                }).toList(),
               ),
             ),
           ),
@@ -130,7 +128,7 @@ class PerformanceGraph extends StatelessWidget {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: (y > 0.7)
+          color: (y > 70)
               ? theme.colorScheme.primary
               : theme.colorScheme.primary.withValues(alpha: 0.3),
           width: 8,
@@ -140,7 +138,7 @@ class PerformanceGraph extends StatelessWidget {
           ),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
-            toY: 1,
+            toY: 100,
             color: theme.brightness == Brightness.light
                 ? AppColors.background
                 : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),

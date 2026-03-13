@@ -25,6 +25,8 @@ import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/presentation/bloc/login_bloc.dart' as _i990;
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart'
     as _i652;
+import '../../features/devices/presentation/bloc/device_detail_bloc.dart'
+    as _i518;
 import '../../features/devices/presentation/bloc/devices_bloc.dart' as _i517;
 import '../../features/monitoring/data/datasources/monitoring_remote_data_source.dart'
     as _i1059;
@@ -81,6 +83,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i517.DevicesBloc>(
         () => _i517.DevicesBloc(gh<_i249.GetDevices>()));
+    gh.factory<_i518.DeviceDetailBloc>(
+      () => _i518.DeviceDetailBloc(gh<_i91.GetDeviceDetails>()),
+    );
     gh.lazySingleton<_i1059.MonitoringRemoteDataSource>(
       () => _i1059.MonitoringRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );

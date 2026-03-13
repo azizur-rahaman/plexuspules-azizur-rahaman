@@ -14,6 +14,9 @@ class Device extends Equatable {
   final String location;
   final String ipAddress;
   final DateTime lastSeen;
+  final double? cpuUsage;
+  final double? memoryUsage;
+  final List<double>? performanceHistory;
 
   const Device({
     required this.id,
@@ -23,6 +26,9 @@ class Device extends Equatable {
     required this.location,
     required this.ipAddress,
     required this.lastSeen,
+    this.cpuUsage,
+    this.memoryUsage,
+    this.performanceHistory,
   });
 
   @override
@@ -34,5 +40,8 @@ class Device extends Equatable {
         location,
         ipAddress,
         lastSeen,
+        cpuUsage,
+        memoryUsage,
+        performanceHistory,
       ];
 }

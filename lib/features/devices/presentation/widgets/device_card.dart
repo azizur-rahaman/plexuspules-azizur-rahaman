@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
 
 class DeviceCard extends StatelessWidget {
+  final String id;
   final String name;
   final String ipAddress;
   final String location;
@@ -13,6 +14,7 @@ class DeviceCard extends StatelessWidget {
 
   const DeviceCard({
     super.key,
+    required this.id,
     required this.name,
     required this.ipAddress,
     required this.location,
@@ -41,7 +43,7 @@ class DeviceCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () => localContext.push('/device-detail/$name'),
+      onTap: () => localContext.push('/device-detail/$id'),
       child: Container(
         padding: EdgeInsets.all(AppSizes.p16),
         decoration: BoxDecoration(

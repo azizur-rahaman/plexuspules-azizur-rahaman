@@ -17,6 +17,9 @@ class DeviceModel extends Device {
     required super.location,
     required super.ipAddress,
     required this.lastSeen,
+    super.cpuUsage,
+    super.memoryUsage,
+    super.performanceHistory,
   }) : super(lastSeen: lastSeen);
 
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>

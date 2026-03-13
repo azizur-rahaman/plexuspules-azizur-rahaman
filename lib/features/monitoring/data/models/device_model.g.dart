@@ -14,6 +14,11 @@ DeviceModel _$DeviceModelFromJson(Map<String, dynamic> json) => DeviceModel(
       location: json['location'] as String,
       ipAddress: json['ipAddress'] as String,
       lastSeen: DateTime.parse(json['lastPing'] as String),
+      cpuUsage: (json['cpuUsage'] as num?)?.toDouble(),
+      memoryUsage: (json['memoryUsage'] as num?)?.toDouble(),
+      performanceHistory: (json['performanceHistory'] as List<dynamic>?)
+          ?.map((e) => (e as num).toDouble())
+          .toList(),
     );
 
 Map<String, dynamic> _$DeviceModelToJson(DeviceModel instance) =>
@@ -25,6 +30,9 @@ Map<String, dynamic> _$DeviceModelToJson(DeviceModel instance) =>
       'location': instance.location,
       'ipAddress': instance.ipAddress,
       'lastPing': instance.lastSeen.toIso8601String(),
+      'cpuUsage': instance.cpuUsage,
+      'memoryUsage': instance.memoryUsage,
+      'performanceHistory': instance.performanceHistory,
     };
 
 const _$DeviceStatusEnumMap = {
