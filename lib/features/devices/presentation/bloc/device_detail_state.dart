@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../monitoring/domain/entities/device.dart';
+import '../../domain/entities/device.dart';
 
 enum DeviceDetailStatus { initial, loading, success, error }
 

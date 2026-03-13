@@ -6,8 +6,8 @@ import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_status_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/circular_usage_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/performance_graph.dart';
-import '../../bloc/device_detail_bloc.dart';
-import '../../bloc/device_detail_state.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/device_detail_bloc.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/device_detail_state.dart';
 
 class DeviceDetailView extends StatelessWidget {
   final String deviceId;

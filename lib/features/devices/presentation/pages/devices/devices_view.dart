@@ -5,10 +5,10 @@ import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
 import 'package:plexuspules/core/widgets/common_search_bar.dart';
-import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
-import '../../bloc/devices_bloc.dart';
-import '../../bloc/devices_event.dart';
-import '../../bloc/devices_state.dart';
+import 'package:plexuspules/features/devices/domain/entities/device.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/devices_bloc.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/devices_event.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/devices_state.dart';
 
 class DevicesView extends StatefulWidget {
   const DevicesView({super.key});
@@ -58,7 +58,8 @@ class _DevicesViewState extends State<DevicesView> {
             Padding(
               padding: EdgeInsets.all(AppSizes.p20),
               child: BlocBuilder<DevicesBloc, DevicesState>(
-                buildWhen: (previous, current) => previous.searchQuery != current.searchQuery,
+                buildWhen: (previous, current) =>
+                    previous.searchQuery != current.searchQuery,
                 builder: (context, state) {
                   return CommonSearchBar(
                     hintText: 'Search device or IP...',
@@ -72,7 +73,8 @@ class _DevicesViewState extends State<DevicesView> {
 
             // Filters
             BlocBuilder<DevicesBloc, DevicesState>(
-              buildWhen: (previous, current) => previous.statusFilter != current.statusFilter,
+              buildWhen: (previous, current) =>
+                  previous.statusFilter != current.statusFilter,
               builder: (context, state) {
                 return SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -82,25 +84,25 @@ class _DevicesViewState extends State<DevicesView> {
                       _FilterChip(
                         label: 'All',
                         isSelected: state.statusFilter == null,
-                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(null)),
+                        onSelect: () => context.read<DevicesBloc>().add(
+                          const ChangeFilter(null),
+                        ),
                       ),
                       AppSizes.gap12,
                       _FilterChip(
                         label: 'Online',
                         isSelected: state.statusFilter == DeviceStatus.online,
-                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.online)),
+                        onSelect: () => context.read<DevicesBloc>().add(
+                          ChangeFilter(DeviceStatus.online),
+                        ),
                       ),
                       AppSizes.gap12,
                       _FilterChip(
                         label: 'Offline',
                         isSelected: state.statusFilter == DeviceStatus.offline,
-                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.offline)),
-                      ),
-                      AppSizes.gap12,
-                      _FilterChip(
-                        label: 'Service',
-                        isSelected: state.statusFilter == DeviceStatus.maintenance,
-                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.maintenance)),
+                        onSelect: () => context.read<DevicesBloc>().add(
+                          ChangeFilter(DeviceStatus.offline),
+                        ),
                       ),
                     ],
                   ),
@@ -129,7 +131,9 @@ class _DevicesViewState extends State<DevicesView> {
                               Text('Error: ${state.message}'),
                               AppSizes.gap16,
                               ElevatedButton(
-                                onPressed: () => context.read<DevicesBloc>().add(const FetchDevices()),
+                                onPressed: () => context
+                                    .read<DevicesBloc>()
+                                    .add(const FetchDevices()),
                                 child: const Text('Retry'),
                               ),
                             ],
@@ -150,7 +154,9 @@ class _DevicesViewState extends State<DevicesView> {
                       AppSizes.p20,
                       AppSizes.p40,
                     ),
-                    itemCount: state.hasReachedMax ? state.devices.length : state.devices.length + 1,
+                    itemCount: state.hasReachedMax
+                        ? state.devices.length
+                        : state.devices.length + 1,
                     separatorBuilder: (context, index) => AppSizes.gap16,
                     itemBuilder: (context, index) {
                       if (index < state.devices.length) {
@@ -161,9 +167,9 @@ class _DevicesViewState extends State<DevicesView> {
                           ipAddress: device.ipAddress,
                           location: device.location,
                           status: device.status,
-                          icon: device.status == DeviceStatus.online 
-                            ? Icons.router_outlined 
-                            : Icons.storage_outlined,
+                          icon: device.status == DeviceStatus.online
+                              ? Icons.router_outlined
+                              : Icons.storage_outlined,
                         );
                       } else {
                         return const Padding(
@@ -205,15 +211,15 @@ class _FilterChip extends StatelessWidget {
           color: isSelected
               ? AppColors.primary
               : (theme.brightness == Brightness.light
-                  ? Colors.white
-                  : theme.colorScheme.surface),
+                    ? Colors.white
+                    : theme.colorScheme.surface),
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
                 : (theme.brightness == Brightness.light
-                    ? AppColors.cardBorder
-                    : theme.colorScheme.outlineVariant),
+                      ? AppColors.cardBorder
+                      : theme.colorScheme.outlineVariant),
           ),
           boxShadow: isSelected
               ? [
@@ -231,8 +237,8 @@ class _FilterChip extends StatelessWidget {
             color: isSelected
                 ? Colors.white
                 : (theme.brightness == Brightness.light
-                    ? AppColors.textSecondary
-                    : theme.colorScheme.onSurfaceVariant),
+                      ? AppColors.textSecondary
+                      : theme.colorScheme.onSurfaceVariant),
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -65,4 +62,15 @@ class DefaultFirebaseOptions {
     storageBucket: 'plexus-cloud-fcm.firebasestorage.app',
     iosBundleId: 'com.pleuxltd.plexuspules',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCARn9-DQ3joz_xrydGyarT5XTIc97powc',
+    appId: '1:988422204034:web:9910ab5d6c0274a9cde29b',
+    messagingSenderId: '988422204034',
+    projectId: 'plexus-cloud-fcm',
+    authDomain: 'plexus-cloud-fcm.firebaseapp.com',
+    storageBucket: 'plexus-cloud-fcm.firebasestorage.app',
+    measurementId: 'G-F368J00XMT',
+  );
+
 }

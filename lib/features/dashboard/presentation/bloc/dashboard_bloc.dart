@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:plexuspules/features/monitoring/domain/usecases/get_dashboard_metrics.dart';
+import 'package:plexuspules/features/dashboard/domain/usecases/get_dashboard_metrics.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 

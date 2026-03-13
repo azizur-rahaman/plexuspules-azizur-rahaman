@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import 'package:plexuspules/features/monitoring/domain/usecases/get_devices.dart';
+import 'package:plexuspules/features/devices/domain/usecases/get_devices.dart';
 import 'devices_event.dart';
 import 'devices_state.dart';
 

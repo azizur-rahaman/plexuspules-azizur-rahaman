@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
+import 'package:plexuspules/features/devices/domain/entities/device.dart';
 
 abstract class DevicesEvent extends Equatable {
   const DevicesEvent();

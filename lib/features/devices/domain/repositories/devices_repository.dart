@@ -1,10 +1,8 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
-import '../entities/dashboard_metrics.dart';
 import '../entities/device.dart';
 
-abstract class MonitoringRepository {
-  Future<Either<Failure, DashboardMetrics>> getDashboardMetrics();
+abstract class DevicesRepository {
   Future<Either<Failure, List<Device>>> getDevices({
     String? search,
     String? status,

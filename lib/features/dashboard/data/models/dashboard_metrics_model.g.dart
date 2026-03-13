@@ -16,7 +16,10 @@ DashboardMetricsModel _$DashboardMetricsModelFromJson(
   cpuUsage: (json['cpuUsage'] as num).toDouble(),
   memoryUsage: (json['memoryUsage'] as num).toDouble(),
   networkTraffic: (json['networkTraffic'] as num).toDouble(),
-  performanceHistory: (json['performanceHistory'] as List<dynamic>?)
+  cpuHistory: (json['cpuHistory'] as List<dynamic>?)
+      ?.map((e) => (e as num).toDouble())
+      .toList(),
+  memoryHistory: (json['memoryHistory'] as List<dynamic>?)
       ?.map((e) => (e as num).toDouble())
       .toList(),
 );
@@ -31,5 +34,6 @@ Map<String, dynamic> _$DashboardMetricsModelToJson(
   'cpuUsage': instance.cpuUsage,
   'memoryUsage': instance.memoryUsage,
   'networkTraffic': instance.networkTraffic,
-  'performanceHistory': instance.performanceHistory,
+  'cpuHistory': instance.cpuHistory,
+  'memoryHistory': instance.memoryHistory,
 };

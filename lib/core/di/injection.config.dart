@@ -23,28 +23,45 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart'
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
 import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/presentation/bloc/login_bloc.dart' as _i990;
+import '../../features/dashboard/data/datasources/dashboard_remote_data_source.dart'
+    as _i258;
+import '../../features/dashboard/data/repositories/dashboard_repository_impl.dart'
+    as _i509;
+import '../../features/dashboard/domain/repositories/dashboard_repository.dart'
+    as _i665;
+import '../../features/dashboard/domain/usecases/get_dashboard_metrics.dart'
+    as _i639;
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart'
     as _i652;
+import '../../features/devices/data/datasources/devices_remote_data_source.dart'
+    as _i748;
+import '../../features/devices/data/repositories/devices_repository_impl.dart'
+    as _i196;
+import '../../features/devices/domain/repositories/devices_repository.dart'
+    as _i1072;
+import '../../features/devices/domain/usecases/get_device_details.dart'
+    as _i413;
+import '../../features/devices/domain/usecases/get_devices.dart' as _i426;
 import '../../features/devices/presentation/bloc/device_detail_bloc.dart'
     as _i722;
 import '../../features/devices/presentation/bloc/devices_bloc.dart' as _i517;
-import '../../features/monitoring/data/datasources/monitoring_remote_data_source.dart'
-    as _i1059;
-import '../../features/monitoring/data/repositories/monitoring_repository_impl.dart'
-    as _i592;
-import '../../features/monitoring/domain/repositories/monitoring_repository.dart'
-    as _i365;
-import '../../features/monitoring/domain/usecases/get_dashboard_metrics.dart'
-    as _i74;
-import '../../features/monitoring/domain/usecases/get_device_details.dart'
-    as _i91;
-import '../../features/monitoring/domain/usecases/get_devices.dart' as _i249;
+import '../../features/performance/data/datasources/performance_remote_data_source.dart'
+    as _i629;
+import '../../features/performance/data/repositories/performance_repository_impl.dart'
+    as _i239;
+import '../../features/performance/domain/repositories/performance_repository.dart'
+    as _i323;
+import '../../features/performance/domain/usecases/get_performance_metrics.dart'
+    as _i498;
+import '../../features/performance/presentation/bloc/performance_bloc.dart'
+    as _i58;
 import '../../features/profile/data/datasources/profile_remote_data_source.dart'
     as _i847;
 import '../../features/profile/data/repositories/profile_repository_impl.dart'
     as _i334;
 import '../../features/profile/domain/repositories/profile_repository.dart'
     as _i894;
+import '../../features/profile/presentation/bloc/profile_bloc.dart' as _i469;
 import '../../features/profile/presentation/blocs/theme/theme_bloc.dart'
     as _i766;
 import '../network/dio_client.dart' as _i667;
@@ -84,17 +101,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i847.ProfileRemoteDataSource>(
       () => _i847.ProfileRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
+    gh.lazySingleton<_i748.DevicesRemoteDataSource>(
+      () => _i748.DevicesRemoteDataSourceImpl(gh<_i667.DioClient>()),
+    );
+    gh.lazySingleton<_i258.DashboardRemoteDataSource>(
+      () => _i258.DashboardRemoteDataSourceImpl(gh<_i667.DioClient>()),
+    );
     gh.lazySingleton<_i852.AuthLocalDataSource>(
       () => _i852.AuthLocalDataSourceImpl(gh<_i535.SecureStorageService>()),
     );
-    gh.lazySingleton<_i1059.MonitoringRemoteDataSource>(
-      () => _i1059.MonitoringRemoteDataSourceImpl(gh<_i667.DioClient>()),
-    );
-    gh.lazySingleton<_i365.MonitoringRepository>(
-      () => _i592.MonitoringRepositoryImpl(
-        gh<_i1059.MonitoringRemoteDataSource>(),
-        gh<_i932.NetworkInfo>(),
-      ),
+    gh.lazySingleton<_i629.PerformanceRemoteDataSource>(
+      () => _i629.PerformanceRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
     gh.lazySingleton<_i787.AuthRepository>(
       () => _i153.AuthRepositoryImpl(
@@ -110,29 +127,55 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i932.NetworkInfo>(),
       ),
     );
+    gh.lazySingleton<_i1072.DevicesRepository>(
+      () => _i196.DevicesRepositoryImpl(
+        gh<_i748.DevicesRemoteDataSource>(),
+        gh<_i932.NetworkInfo>(),
+      ),
+    );
+    gh.factory<_i469.ProfileBloc>(
+      () => _i469.ProfileBloc(gh<_i894.ProfileRepository>()),
+    );
     gh.lazySingleton<_i188.LoginUseCase>(
       () => _i188.LoginUseCase(gh<_i787.AuthRepository>()),
     );
-    gh.lazySingleton<_i74.GetDashboardMetrics>(
-      () => _i74.GetDashboardMetrics(gh<_i365.MonitoringRepository>()),
+    gh.lazySingleton<_i323.PerformanceRepository>(
+      () => _i239.PerformanceRepositoryImpl(
+        gh<_i629.PerformanceRemoteDataSource>(),
+      ),
     );
-    gh.lazySingleton<_i91.GetDeviceDetails>(
-      () => _i91.GetDeviceDetails(gh<_i365.MonitoringRepository>()),
+    gh.lazySingleton<_i665.DashboardRepository>(
+      () => _i509.DashboardRepositoryImpl(
+        gh<_i258.DashboardRemoteDataSource>(),
+        gh<_i932.NetworkInfo>(),
+      ),
     );
-    gh.lazySingleton<_i249.GetDevices>(
-      () => _i249.GetDevices(gh<_i365.MonitoringRepository>()),
+    gh.lazySingleton<_i639.GetDashboardMetrics>(
+      () => _i639.GetDashboardMetrics(gh<_i665.DashboardRepository>()),
+    );
+    gh.factory<_i652.DashboardBloc>(
+      () => _i652.DashboardBloc(gh<_i639.GetDashboardMetrics>()),
     );
     gh.factory<_i990.LoginBloc>(
       () => _i990.LoginBloc(gh<_i188.LoginUseCase>()),
     );
-    gh.factory<_i722.DeviceDetailBloc>(
-      () => _i722.DeviceDetailBloc(gh<_i91.GetDeviceDetails>()),
+    gh.lazySingleton<_i413.GetDeviceDetails>(
+      () => _i413.GetDeviceDetails(gh<_i1072.DevicesRepository>()),
     );
-    gh.factory<_i652.DashboardBloc>(
-      () => _i652.DashboardBloc(gh<_i74.GetDashboardMetrics>()),
+    gh.lazySingleton<_i426.GetDevices>(
+      () => _i426.GetDevices(gh<_i1072.DevicesRepository>()),
+    );
+    gh.lazySingleton<_i498.GetPerformanceMetrics>(
+      () => _i498.GetPerformanceMetrics(gh<_i323.PerformanceRepository>()),
+    );
+    gh.factory<_i58.PerformanceBloc>(
+      () => _i58.PerformanceBloc(gh<_i498.GetPerformanceMetrics>()),
+    );
+    gh.factory<_i722.DeviceDetailBloc>(
+      () => _i722.DeviceDetailBloc(gh<_i413.GetDeviceDetails>()),
     );
     gh.factory<_i517.DevicesBloc>(
-      () => _i517.DevicesBloc(gh<_i249.GetDevices>()),
+      () => _i517.DevicesBloc(gh<_i426.GetDevices>()),
     );
     return this;
   }

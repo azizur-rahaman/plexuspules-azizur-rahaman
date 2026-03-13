@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/device.dart';
-import '../repositories/monitoring_repository.dart';
+import '../repositories/devices_repository.dart';
 
 @lazySingleton
 class GetDeviceDetails {
-  final MonitoringRepository _repository;
+  final DevicesRepository _repository;
 
   GetDeviceDetails(this._repository);
 

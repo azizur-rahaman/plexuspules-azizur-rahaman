@@ -12,11 +12,11 @@ class DeviceModel extends Device {
     required super.status,
     required super.location,
     required super.ipAddress,
-    @JsonKey(name: 'lastPing') required DateTime lastSeen,
+    @JsonKey(name: 'lastPing') required super.lastSeen,
     super.cpuUsage,
     super.memoryUsage,
     super.performanceHistory,
-  }) : super(lastSeen: lastSeen);
+  });
 
   factory DeviceModel.fromJson(Map<String, dynamic> json) =>
       _$DeviceModelFromJson(json);

@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/dashboard_metrics.dart';
-import '../repositories/monitoring_repository.dart';
+import '../repositories/dashboard_repository.dart';
 
 @lazySingleton
 class GetDashboardMetrics {
-  final MonitoringRepository _repository;
+  final DashboardRepository _repository;
 
   GetDashboardMetrics(this._repository);
 

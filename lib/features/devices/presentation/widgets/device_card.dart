@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
-import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
+import '../../domain/entities/device.dart';
 
 class DeviceCard extends StatelessWidget {
   final String id;

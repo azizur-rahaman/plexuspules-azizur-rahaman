@@ -8,7 +8,8 @@ class DashboardMetrics extends Equatable {
   final double cpuUsage;
   final double memoryUsage;
   final double networkTraffic;
-  final List<double>? performanceHistory;
+  final List<double>? cpuHistory;
+  final List<double>? memoryHistory;
 
   const DashboardMetrics({
     required this.totalDevices,
@@ -18,7 +19,8 @@ class DashboardMetrics extends Equatable {
     required this.cpuUsage,
     required this.memoryUsage,
     required this.networkTraffic,
-    this.performanceHistory,
+    this.cpuHistory,
+    this.memoryHistory,
   });
 
   @override
@@ -30,6 +32,7 @@ class DashboardMetrics extends Equatable {
     cpuUsage,
     memoryUsage,
     networkTraffic,
-    performanceHistory,
+    cpuHistory,
+    memoryHistory,
   ];
 }

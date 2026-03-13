@@ -1,5 +1,5 @@
+import '../../domain/entities/dashboard_metrics.dart';
 import 'package:equatable/equatable.dart';
-import 'package:plexuspules/features/monitoring/domain/entities/dashboard_metrics.dart';
 
 abstract class DashboardState extends Equatable {
   const DashboardState();

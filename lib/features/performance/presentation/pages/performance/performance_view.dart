@@ -2,8 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
-import 'package:plexuspules/features/dashboard/presentation/bloc/dashboard_bloc.dart';
-import 'package:plexuspules/features/dashboard/presentation/bloc/dashboard_state.dart';
+import 'package:plexuspules/features/performance/presentation/bloc/performance_bloc.dart';
+import 'package:plexuspules/features/performance/presentation/bloc/performance_event.dart';
+import 'package:plexuspules/features/performance/presentation/bloc/performance_state.dart';
+import 'package:plexuspules/core/di/injection.dart';
 
 class PerformanceView extends StatelessWidget {
   const PerformanceView({super.key});
@@ -12,61 +14,77 @@ class PerformanceView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: CommonAppBar.brand(),
-      body: SafeArea(
-        child: BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
-            if (state is DashboardLoading && (state is! DashboardLoaded)) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return BlocProvider(
+      create: (context) => getIt<PerformanceBloc>()..add(FetchPerformanceMetrics()),
+      child: Scaffold(
+        appBar: CommonAppBar.brand(),
+        body: SafeArea(
+          child: BlocBuilder<PerformanceBloc, PerformanceState>(
+            builder: (context, state) {
+              if (state is PerformanceInitial || (state is PerformanceLoading && state is! PerformanceLoaded)) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (state is DashboardError) {
-              return Center(child: Text('Error: ${state.message}'));
-            }
+              if (state is PerformanceError) {
+                return Center(child: Text('Error: ${state.message}'));
+              }
 
-            if (state is DashboardLoaded) {
-              final metrics = state.metrics;
-              final history = metrics.performanceHistory ?? [];
+              if (state is PerformanceLoaded) {
+                final metrics = state.metrics;
+                final cpuHistory = metrics.cpuHistory;
+                final memoryHistory = metrics.memoryHistory;
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Performance Analytics',
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Performance Analytics',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Real-time system health monitoring',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Real-time system health monitoring',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    _buildChartCard(
-                      context: context,
-                      title: 'OVERALL PERFORMANCE',
-                      value: '${((metrics.cpuUsage + metrics.memoryUsage) / 2).toStringAsFixed(1)}%',
-                      change: 'System-wide',
-                      isPositive: metrics.alerts == 0,
-                      chartColor: theme.colorScheme.primary,
-                      spots: history.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
-                      maxY: 100,
-                      yInterval: 25,
-                    ),
-                  ],
-                ),
-              );
-            }
+                      const SizedBox(height: 32),
+                      _buildChartCard(
+                        context: context,
+                        title: 'CPU USAGE',
+                        value: '${metrics.cpuUsage.toStringAsFixed(1)}%',
+                        change: 'Average CPU',
+                        isPositive: metrics.cpuUsage < 80,
+                        chartColor: Colors.blue,
+                        spots: cpuHistory.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
+                        maxY: 100,
+                        yInterval: 25,
+                      ),
+                      const SizedBox(height: 24),
+                      _buildChartCard(
+                        context: context,
+                        title: 'MEMORY USAGE',
+                        value: '${metrics.memoryUsage.toStringAsFixed(1)}%',
+                        change: 'Average Memory',
+                        isPositive: metrics.memoryUsage < 80,
+                        chartColor: Colors.purple,
+                        spots: memoryHistory.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
+                        maxY: 100,
+                        yInterval: 25,
+                      ),
+                    ],
+                  ),
+                );
+              }
 
-            return const SizedBox.shrink();
-          },
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );

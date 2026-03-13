@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/stat_card.dart';
-import 'package:plexuspules/features/dashboard/presentation/widgets/network_health_card.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/alert_item.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import '../../bloc/dashboard_bloc.dart';
@@ -46,7 +45,9 @@ class _DashboardViewState extends State<DashboardView> {
                     Text('Error: ${state.message}'),
                     AppSizes.gap16,
                     ElevatedButton(
-                      onPressed: () => context.read<DashboardBloc>().add(const FetchDashboardMetrics()),
+                      onPressed: () => context.read<DashboardBloc>().add(
+                        const FetchDashboardMetrics(),
+                      ),
                       child: const Text('Retry'),
                     ),
                   ],
@@ -102,14 +103,14 @@ class _DashboardViewState extends State<DashboardView> {
                     ),
                     AppSizes.gap32,
 
-                    // Network Health
-                    NetworkHealthCard(
-                      percentage: metrics.totalDevices > 0 
-                        ? (metrics.onlineDevices / metrics.totalDevices * 100).round()
-                        : 0,
-                      latency: '14ms', // Still mock or can add to metrics
-                      status: 'Stable',
-                    ),
+                    // // Network Health
+                    // NetworkHealthCard(
+                    //   percentage: metrics.totalDevices > 0
+                    //     ? (metrics.onlineDevices / metrics.totalDevices * 100).round()
+                    //     : 0,
+                    //   latency: '14ms', // Still mock or can add to metrics
+                    //   status: 'Stable',
+                    // ),
                     AppSizes.gap32,
 
                     // Recent Alerts Header
@@ -118,11 +119,13 @@ class _DashboardViewState extends State<DashboardView> {
                       children: [
                         Text(
                           'Recent Alerts',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
-                        TextButton(onPressed: () {}, child: const Text('View All')),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text('View All'),
+                        ),
                       ],
                     ),
                     AppSizes.gap16,

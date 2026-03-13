@@ -13,7 +13,8 @@ class DashboardMetricsModel extends DashboardMetrics {
     required super.cpuUsage,
     required super.memoryUsage,
     required super.networkTraffic,
-    super.performanceHistory,
+    super.cpuHistory,
+    super.memoryHistory,
   });
 
   factory DashboardMetricsModel.fromJson(Map<String, dynamic> json) =>

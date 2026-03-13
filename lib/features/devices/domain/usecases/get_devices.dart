@@ -3,11 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/device.dart';
-import '../repositories/monitoring_repository.dart';
+import '../repositories/devices_repository.dart';
 
 @lazySingleton
 class GetDevices {
-  final MonitoringRepository _repository;
+  final DevicesRepository _repository;
 
   GetDevices(this._repository);
 
@@ -27,7 +27,12 @@ class GetDevicesParams extends Equatable {
   final int? page;
   final int? limit;
 
-  const GetDevicesParams({this.search, this.status, this.page, this.limit});
+  const GetDevicesParams({
+    this.search,
+    this.status,
+    this.page,
+    this.limit,
+  });
 
   @override
   List<Object?> get props => [search, status, page, limit];
