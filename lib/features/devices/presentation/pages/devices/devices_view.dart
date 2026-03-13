@@ -3,7 +3,6 @@ import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
-
 import 'package:plexuspules/core/widgets/common_search_bar.dart';
 
 class DevicesView extends StatefulWidget {
@@ -15,6 +14,80 @@ class DevicesView extends StatefulWidget {
 
 class _DevicesViewState extends State<DevicesView> {
   String _selectedFilter = 'All';
+  final ScrollController _scrollController = ScrollController();
+  
+  final List<Map<String, dynamic>> _items = [];
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _page = 1;
+  static const int _pageSize = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPage();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoading &&
+        _hasMore) {
+      _fetchPage();
+    }
+  }
+
+  Future<void> _fetchPage() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    // Simulate network delay
+    await Future.delayed(const Duration(seconds: 1));
+
+    final List<Map<String, dynamic>> newItems = List.generate(_pageSize, (index) {
+      final id = (_page - 1) * _pageSize + index + 1;
+      return {
+        'name': 'Device-$id',
+        'ipAddress': '192.168.1.$id',
+        'location': id % 2 == 0 ? 'Singapore Data Center' : 'New York Node',
+        'status': id % 3 == 0 ? DeviceStatus.offline : DeviceStatus.online,
+        'icon': id % 2 == 0 ? Icons.router_outlined : Icons.storage_outlined,
+      };
+    });
+
+    if (mounted) {
+      setState(() {
+        _items.addAll(newItems);
+        _isLoading = false;
+        _page++;
+        // Stop after 5 pages (50 items) for this mock implementation
+        if (_page > 5) {
+          _hasMore = false;
+        }
+      });
+    }
+  }
+
+  void _resetPagination(String filter) {
+    setState(() {
+      _selectedFilter = filter;
+      _items.clear();
+      _page = 1;
+      _hasMore = true;
+      _isLoading = false;
+    });
+    _fetchPage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +113,19 @@ class _DevicesViewState extends State<DevicesView> {
                   _FilterChip(
                     label: 'All',
                     isSelected: _selectedFilter == 'All',
-                    onSelect: () => setState(() => _selectedFilter = 'All'),
+                    onSelect: () => _resetPagination('All'),
                   ),
                   AppSizes.gap12,
                   _FilterChip(
                     label: 'Online',
                     isSelected: _selectedFilter == 'Online',
-                    onSelect: () => setState(() => _selectedFilter = 'Online'),
+                    onSelect: () => _resetPagination('Online'),
                   ),
                   AppSizes.gap12,
                   _FilterChip(
                     label: 'Offline',
                     isSelected: _selectedFilter == 'Offline',
-                    onSelect: () => setState(() => _selectedFilter = 'Offline'),
+                    onSelect: () => _resetPagination('Offline'),
                   ),
                 ],
               ),
@@ -62,42 +135,37 @@ class _DevicesViewState extends State<DevicesView> {
 
             // Device List
             Expanded(
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                children: [
-                  const DeviceCard(
-                    name: 'Core-Switch-01',
-                    ipAddress: '192.168.1.1',
-                    location: 'Singapore Data Center',
-                    status: DeviceStatus.online,
-                    icon: Icons.router_outlined,
-                  ),
-                  AppSizes.gap16,
-                  const DeviceCard(
-                    name: 'Edge-Router-NY-04',
-                    ipAddress: '10.0.42.15',
-                    location: 'New York Node',
-                    status: DeviceStatus.offline,
-                    icon: Icons.settings_input_component_outlined,
-                  ),
-                  AppSizes.gap16,
-                  const DeviceCard(
-                    name: 'DB-Cluster-Primary',
-                    ipAddress: '172.16.0.8',
-                    location: 'London AWS-West',
-                    status: DeviceStatus.online,
-                    icon: Icons.storage_outlined,
-                  ),
-                  AppSizes.gap16,
-                  const DeviceCard(
-                    name: 'AP-Floor-02-North',
-                    ipAddress: '192.168.10.22',
-                    location: 'HQ - Tokyo',
-                    status: DeviceStatus.online,
-                    icon: Icons.wifi_tethering_outlined,
-                  ),
-                  AppSizes.gap24, // Bottom padding
-                ],
+              child: ListView.separated(
+                controller: _scrollController,
+                padding: EdgeInsets.fromLTRB(
+                  AppSizes.p20,
+                  0,
+                  AppSizes.p20,
+                  AppSizes.p40, // Added bottom padding
+                ),
+                itemCount: _items.length + (_hasMore ? 1 : 0),
+                separatorBuilder: (context, index) => AppSizes.gap16,
+                itemBuilder: (context, index) {
+                  if (index < _items.length) {
+                    final device = _items[index];
+                    return DeviceCard(
+                      name: device['name'],
+                      ipAddress: device['ipAddress'],
+                      location: device['location'],
+                      status: device['status'],
+                      icon: device['icon'],
+                    );
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: AppSizes.p20),
+                      child: Center(
+                        child: _isLoading
+                            ? const CircularProgressIndicator()
+                            : const SizedBox.shrink(),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ],

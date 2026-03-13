@@ -79,25 +79,6 @@ class PerformanceView extends StatelessWidget {
                 yLabel: (val) => '${val.toInt()}GB',
               ),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildMetricCard(
-                      title: 'UPTIME',
-                      value: '99.98%',
-                      valueColor: const Color(0xFF2F6B4F),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildMetricCard(
-                      title: 'LATENCY',
-                      value: '24ms',
-                      valueColor: const Color(0xFF2F6B4F),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -280,50 +261,6 @@ class PerformanceView extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMetricCard({
-    required String title,
-    required String value,
-    required Color valueColor,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF94A3B8),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              color: valueColor,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
             ),
           ),
         ],
