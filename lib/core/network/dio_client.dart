@@ -1,19 +1,22 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import '../services/secure_storage_service.dart';
+import 'auth_interceptor.dart';
 
+@lazySingleton
 class DioClient {
-  static final DioClient _instance = DioClient._internal();
   late final Dio _dio;
+  final SecureStorageService _secureStorageService;
 
-  factory DioClient() {
-    return _instance;
-  }
-
-  DioClient._internal() {
+  DioClient(this._secureStorageService) {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://api.example.com', // Replace with your actual base URL
+        baseUrl: kIsWeb || !defaultTargetPlatform.toString().contains('Android') 
+          ? dotenv.get('BASE_URL_LOCAL', fallback: 'http://localhost:3000/api') 
+          : dotenv.get('BASE_URL_ANDROID', fallback: 'http://10.0.2.2:3000/api'),
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
@@ -24,7 +27,8 @@ class DioClient {
       ),
     );
 
-    // Only add the pretty logger in debug mode
+    _dio.interceptors.add(AuthInterceptor(_secureStorageService));
+
     if (kDebugMode) {
       _dio.interceptors.add(
         PrettyDioLogger(
@@ -38,21 +42,10 @@ class DioClient {
         ),
       );
     }
-
-    // You can add more interceptors here, like auth tokens:
-    // _dio.interceptors.add(InterceptorsWrapper(
-    //   onRequest: (options, handler) {
-    //     // Add authorization token
-    //     // options.headers['Authorization'] = 'Bearer $token';
-    //     return handler.next(options);
-    //   },
-    // ));
   }
 
-  // Getter for the configured Dio instance
   Dio get dio => _dio;
 
-  // Convenience methods
   Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,

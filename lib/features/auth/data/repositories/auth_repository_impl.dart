@@ -42,8 +42,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(
         AuthResponse(
           accessToken: model.accessToken,
-          tokenType: model.tokenType,
-          expiresIn: model.expiresIn,
           userId: model.user.id,
           userEmail: model.user.email,
           userName: model.user.name,

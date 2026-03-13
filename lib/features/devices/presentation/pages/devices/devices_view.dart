@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
 import 'package:plexuspules/core/widgets/common_search_bar.dart';
+import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
+import '../../bloc/devices_bloc.dart';
+import '../../bloc/devices_event.dart';
+import '../../bloc/devices_state.dart';
 
 class DevicesView extends StatefulWidget {
   const DevicesView({super.key});
@@ -13,19 +18,11 @@ class DevicesView extends StatefulWidget {
 }
 
 class _DevicesViewState extends State<DevicesView> {
-  String _selectedFilter = 'All';
   final ScrollController _scrollController = ScrollController();
-  
-  final List<Map<String, dynamic>> _items = [];
-  bool _isLoading = false;
-  bool _hasMore = true;
-  int _page = 1;
-  static const int _pageSize = 10;
 
   @override
   void initState() {
     super.initState();
-    _fetchPage();
     _scrollController.addListener(_onScroll);
   }
 
@@ -36,57 +33,16 @@ class _DevicesViewState extends State<DevicesView> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 200 &&
-        !_isLoading &&
-        _hasMore) {
-      _fetchPage();
+    if (_isBottom) {
+      context.read<DevicesBloc>().add(const LoadMoreDevices());
     }
   }
 
-  Future<void> _fetchPage() async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
-
-    final List<Map<String, dynamic>> newItems = List.generate(_pageSize, (index) {
-      final id = (_page - 1) * _pageSize + index + 1;
-      return {
-        'name': 'Device-$id',
-        'ipAddress': '192.168.1.$id',
-        'location': id % 2 == 0 ? 'Singapore Data Center' : 'New York Node',
-        'status': id % 3 == 0 ? DeviceStatus.offline : DeviceStatus.online,
-        'icon': id % 2 == 0 ? Icons.router_outlined : Icons.storage_outlined,
-      };
-    });
-
-    if (mounted) {
-      setState(() {
-        _items.addAll(newItems);
-        _isLoading = false;
-        _page++;
-        // Stop after 5 pages (50 items) for this mock implementation
-        if (_page > 5) {
-          _hasMore = false;
-        }
-      });
-    }
-  }
-
-  void _resetPagination(String filter) {
-    setState(() {
-      _selectedFilter = filter;
-      _items.clear();
-      _page = 1;
-      _hasMore = true;
-      _isLoading = false;
-    });
-    _fetchPage();
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
   }
 
   @override
@@ -101,70 +57,121 @@ class _DevicesViewState extends State<DevicesView> {
             // Search Bar
             Padding(
               padding: EdgeInsets.all(AppSizes.p20),
-              child: const CommonSearchBar(hintText: 'Search device or IP...'),
+              child: BlocBuilder<DevicesBloc, DevicesState>(
+                buildWhen: (previous, current) => previous.searchQuery != current.searchQuery,
+                builder: (context, state) {
+                  return CommonSearchBar(
+                    hintText: 'Search device or IP...',
+                    onChanged: (value) {
+                      context.read<DevicesBloc>().add(SearchChanged(value));
+                    },
+                  );
+                },
+              ),
             ),
 
             // Filters
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
-              child: Row(
-                children: [
-                  _FilterChip(
-                    label: 'All',
-                    isSelected: _selectedFilter == 'All',
-                    onSelect: () => _resetPagination('All'),
+            BlocBuilder<DevicesBloc, DevicesState>(
+              buildWhen: (previous, current) => previous.statusFilter != current.statusFilter,
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                  child: Row(
+                    children: [
+                      _FilterChip(
+                        label: 'All',
+                        isSelected: state.statusFilter == null,
+                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(null)),
+                      ),
+                      AppSizes.gap12,
+                      _FilterChip(
+                        label: 'Online',
+                        isSelected: state.statusFilter == DeviceStatus.online,
+                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.online)),
+                      ),
+                      AppSizes.gap12,
+                      _FilterChip(
+                        label: 'Offline',
+                        isSelected: state.statusFilter == DeviceStatus.offline,
+                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.offline)),
+                      ),
+                      AppSizes.gap12,
+                      _FilterChip(
+                        label: 'Service',
+                        isSelected: state.statusFilter == DeviceStatus.maintenance,
+                        onSelect: () => context.read<DevicesBloc>().add(const ChangeFilter(DeviceStatus.maintenance)),
+                      ),
+                    ],
                   ),
-                  AppSizes.gap12,
-                  _FilterChip(
-                    label: 'Online',
-                    isSelected: _selectedFilter == 'Online',
-                    onSelect: () => _resetPagination('Online'),
-                  ),
-                  AppSizes.gap12,
-                  _FilterChip(
-                    label: 'Offline',
-                    isSelected: _selectedFilter == 'Offline',
-                    onSelect: () => _resetPagination('Offline'),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
 
             AppSizes.gap20,
 
             // Device List
             Expanded(
-              child: ListView.separated(
-                controller: _scrollController,
-                padding: EdgeInsets.fromLTRB(
-                  AppSizes.p20,
-                  0,
-                  AppSizes.p20,
-                  AppSizes.p40, // Added bottom padding
-                ),
-                itemCount: _items.length + (_hasMore ? 1 : 0),
-                separatorBuilder: (context, index) => AppSizes.gap16,
-                itemBuilder: (context, index) {
-                  if (index < _items.length) {
-                    final device = _items[index];
-                    return DeviceCard(
-                      name: device['name'],
-                      ipAddress: device['ipAddress'],
-                      location: device['location'],
-                      status: device['status'],
-                      icon: device['icon'],
-                    );
-                  } else {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: AppSizes.p20),
-                      child: Center(
-                        child: _isLoading
-                            ? const CircularProgressIndicator()
-                            : const SizedBox.shrink(),
-                      ),
-                    );
+              child: BlocBuilder<DevicesBloc, DevicesState>(
+                builder: (context, state) {
+                  switch (state.status) {
+                    case DevicesStatus.initial:
+                    case DevicesStatus.loading:
+                      if (state.devices.isEmpty) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    case DevicesStatus.error:
+                      if (state.devices.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Error: ${state.message}'),
+                              AppSizes.gap16,
+                              ElevatedButton(
+                                onPressed: () => context.read<DevicesBloc>().add(const FetchDevices()),
+                                child: const Text('Retry'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    case DevicesStatus.success:
+                      if (state.devices.isEmpty) {
+                        return const Center(child: Text('No devices found'));
+                      }
                   }
+
+                  return ListView.separated(
+                    controller: _scrollController,
+                    padding: EdgeInsets.fromLTRB(
+                      AppSizes.p20,
+                      0,
+                      AppSizes.p20,
+                      AppSizes.p40,
+                    ),
+                    itemCount: state.hasReachedMax ? state.devices.length : state.devices.length + 1,
+                    separatorBuilder: (context, index) => AppSizes.gap16,
+                    itemBuilder: (context, index) {
+                      if (index < state.devices.length) {
+                        final device = state.devices[index];
+                        return DeviceCard(
+                          name: device.name,
+                          ipAddress: device.ipAddress,
+                          location: device.location,
+                          status: device.status,
+                          icon: device.status == DeviceStatus.online 
+                            ? Icons.router_outlined 
+                            : Icons.storage_outlined,
+                        );
+                      } else {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 32),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                    },
+                  );
                 },
               ),
             ),

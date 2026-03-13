@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
-
-enum DeviceStatus { online, offline }
+import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
 
 class DeviceCard extends StatelessWidget {
   final String name;
@@ -23,11 +22,26 @@ class DeviceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isOnline = status == DeviceStatus.online;
+    BuildContext localContext = context;
     final theme = Theme.of(context);
 
+    Color statusColor;
+    String statusLabel;
+
+    switch (status) {
+      case DeviceStatus.online:
+        statusColor = AppColors.healthy;
+        statusLabel = 'ONLINE';
+      case DeviceStatus.offline:
+        statusColor = AppColors.critical;
+        statusLabel = 'OFFLINE';
+      case DeviceStatus.maintenance:
+        statusColor = Colors.orange;
+        statusLabel = 'SERVICE';
+    }
+
     return GestureDetector(
-      onTap: () => context.push('/device-detail/$name'),
+      onTap: () => localContext.push('/device-detail/$name'),
       child: Container(
         padding: EdgeInsets.all(AppSizes.p16),
         decoration: BoxDecoration(
@@ -85,8 +99,7 @@ class DeviceCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: (isOnline ? AppColors.healthy : AppColors.critical)
-                              .withValues(alpha: 0.1),
+                          color: statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Row(
@@ -96,15 +109,15 @@ class DeviceCard extends StatelessWidget {
                               width: 6,
                               height: 6,
                               decoration: BoxDecoration(
-                                color: isOnline ? AppColors.healthy : AppColors.critical,
+                                color: statusColor,
                                 shape: BoxShape.circle,
                               ),
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              isOnline ? 'ONLINE' : 'OFFLINE',
+                              statusLabel,
                               style: TextStyle(
-                                color: isOnline ? AppColors.healthy : AppColors.critical,
+                                color: statusColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),

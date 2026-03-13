@@ -1,11 +1,10 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/network/dio_client.dart';
 import '../models/auth_request_model.dart';
 import '../models/auth_response_model.dart';
-import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   /// Authenticates a user with email and password.
@@ -16,43 +15,26 @@ abstract class AuthRemoteDataSource {
 
 @LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final DioClient _dioClient;
+
+  AuthRemoteDataSourceImpl(this._dioClient);
+
   @override
   Future<AuthResponseModel> login(AuthRequestModel request) async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 1200));
+    try {
+      final response = await _dioClient.post(
+        '/auth/login',
+        data: request.toJson(),
+      );
 
-    // Validate credentials — credentials are never exposed in UI
-    const validEmail = 'admin@plexus.com';
-    const validPassword = 'password123';
-
-    if (request.email != validEmail || request.password != validPassword) {
-      throw const UnauthorizedException();
+      return AuthResponseModel.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw const UnauthorizedException();
+      }
+      throw ServerException(e.message ?? 'Server error occurred');
+    } catch (e) {
+      throw ServerException(e.toString());
     }
-
-    // Generate a dummy JWT
-    final header = base64Url.encode(utf8.encode('{"alg":"HS256","typ":"JWT"}'));
-    final payload = base64Url.encode(
-      utf8.encode(
-        '{"sub":"usr_plexus_001","email":"admin@plexus.com",'
-        '"name":"Admin User","role":"admin",'
-        '"iat":${DateTime.now().millisecondsSinceEpoch ~/ 1000},'
-        '"exp":${(DateTime.now().millisecondsSinceEpoch ~/ 1000) + 3600}}',
-      ),
-    );
-    // Dummy signature (not cryptographically valid — for mock purposes only)
-    const signature = 'plexuspulse_dummy_sig';
-    final fakeJwt = '$header.$payload.$signature';
-
-    return AuthResponseModel(
-      accessToken: fakeJwt,
-      tokenType: 'Bearer',
-      expiresIn: 3600,
-      user: const UserModel(
-        id: 'usr_plexus_001',
-        email: 'admin@plexus.com',
-        name: 'Admin User',
-        role: 'admin',
-      ),
-    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
+import 'package:plexuspules/features/monitoring/domain/entities/device.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_status_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/circular_usage_card.dart';
