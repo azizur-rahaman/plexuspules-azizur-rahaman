@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 
-class ThroughputChartCard extends StatelessWidget {
-  const ThroughputChartCard({super.key});
+class PerformanceGraph extends StatelessWidget {
+  const PerformanceGraph({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class ThroughputChartCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Throughput',
+                'Performance',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,

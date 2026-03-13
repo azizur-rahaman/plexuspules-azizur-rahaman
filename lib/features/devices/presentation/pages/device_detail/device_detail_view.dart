@@ -5,7 +5,7 @@ import 'package:plexuspules/core/widgets/common_app_bar.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/device_status_card.dart';
 import 'package:plexuspules/features/devices/presentation/widgets/circular_usage_card.dart';
-import 'package:plexuspules/features/devices/presentation/widgets/throughput_chart_card.dart';
+import 'package:plexuspules/features/devices/presentation/widgets/performance_graph.dart';
 
 class DeviceDetailView extends StatelessWidget {
   final String deviceId;
@@ -63,7 +63,7 @@ class DeviceDetailView extends StatelessWidget {
                 ],
               ),
               AppSizes.gap20,
-              const ThroughputChartCard(),
+              const PerformanceGraph(),
               AppSizes.gap24, // Bottom padding
             ],
           ),
