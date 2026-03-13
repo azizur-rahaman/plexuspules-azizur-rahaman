@@ -1,6 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:plexuspules/core/services/push_notification_service.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/devices_event.dart';
+import 'package:plexuspules/features/devices/presentation/bloc/devices_state.dart';
 import 'package:dio/dio.dart';
 import 'package:plexuspules/core/network/dio_client.dart';
 import 'package:plexuspules/features/auth/domain/repositories/auth_repository.dart';
@@ -35,22 +39,23 @@ class MockDio extends Mock implements Dio {}
 class MockDioClient extends Mock implements DioClient {}
 class MockAuthRepository extends Mock implements AuthRepository {}
 class MockLoginUseCase extends Mock implements LoginUseCase {}
-class MockLoginBloc extends Mock implements LoginBloc {}
+class MockLoginBloc extends MockBloc<LoginEvent, LoginState> implements LoginBloc {}
 class MockDashboardRepository extends Mock implements DashboardRepository {}
 class MockGetDashboardMetricsUseCase extends Mock implements GetDashboardMetrics {}
-class MockDashboardBloc extends Mock implements DashboardBloc {}
+class MockDashboardBloc extends MockBloc<DashboardEvent, DashboardState> implements DashboardBloc {}
 class MockDashboardRemoteDataSource extends Mock implements DashboardRemoteDataSource {}
 class MockDevicesRepository extends Mock implements DevicesRepository {}
 class MockGetDevicesUseCase extends Mock implements GetDevices {}
 class MockGetDeviceDetailsUseCase extends Mock implements GetDeviceDetails {}
-class MockDevicesBloc extends Mock implements DevicesBloc {}
-class MockDeviceDetailBloc extends Mock implements DeviceDetailBloc {}
+class MockDevicesBloc extends MockBloc<DevicesEvent, DevicesState> implements DevicesBloc {}
+class MockDeviceDetailBloc extends MockBloc<DeviceDetailEvent, DeviceDetailState> implements DeviceDetailBloc {}
 class MockDevicesRemoteDataSource extends Mock implements DevicesRemoteDataSource {}
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
+class MockPushNotificationService extends Mock implements PushNotificationService {}
 
 // Fake classes for Mocktail if needed for registration
 class FakeLoginEvent extends Fake implements LoginEvent {}

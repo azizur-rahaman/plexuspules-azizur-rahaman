@@ -55,6 +55,21 @@ class ProfileRepositoryImpl implements ProfileRepository {
   }
 
   @override
+  Future<Either<Failure, Unit>> registerFcmToken(String token) async {
+    final isConnected = await _networkInfo.isConnected;
+    if (!isConnected) {
+      return const Left(NetworkFailure());
+    }
+
+    try {
+      await _remoteDataSource.registerFcmToken(token);
+      return const Right(unit);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> logout() async {
     try {
       await _authLocalDataSource.clearToken();

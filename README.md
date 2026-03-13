@@ -9,6 +9,7 @@ PlexusPules is a premium, modern Flutter mobile application designed as a Networ
 *   **Infrastructure Monitoring**: Comprehensive device list with real-time status tracking, advanced search, and category filtering.
 *   **Performance Analytics (Dual Graphs)**: Dedicated views for high-fidelity CPU and Memory usage tracking with data-rich visual history.
 *   **Real-Time Alerts**: Dynamic notification system that polls for critical network events every 30 seconds.
+*   **FCM Push Notifications**: End-to-end integration for background critical alerts with automatic backend triggers.
 *   **Dark Mode Support**: Context-aware UI components optimized for high-visibility in both light and dark environments.
 *   **Modern Design**: Built with premium aesthetics, glassmorphism elements, and smooth micro-animations.
 
@@ -96,17 +97,13 @@ lib/
 
 ## 📡 Real-Time Data Handling
 
-PlexusPules simulates real-time data flow using **Periodic Polling**. Dedicated BLoCs utilize `Timer.periodic` to trigger Fetch events (e.g., Performance data every 5s, Alerts every 30s) from the REST API, ensuring the UI stays synchronized with system deviations without requiring full page reloads.
+PlexusPules utilizes a hybrid approach for real-time data synchronization:
+-   **Periodic Polling**: Dedicated BLoCs utilize `Timer.periodic` to trigger Fetch events (e.g., Performance data every 5s, Alerts every 30s) from the REST API.
+-   **FCM Push Notifications**: Leverages **Firebase Cloud Messaging** for high-priority background alerts. A dedicated `PushNotificationService` manages token lifecycle and message handling, ensuring users are notified of critical system deviations even when the app is in the background.
 
 ## 📦 Offline Support
 
 The application utilizes **Hive** for light-weight local caching of metadata and **Flutter Secure Storage** for encrypted handling of sensitive authentication tokens, allowing the app to retain the last known state during intermittent connectivity.
-
-## 🔮 Future Improvements
-
--   [ ] **WebSockets Integration**: Transition from polling to WebSockets for sub-second latency updates.
--   [ ] **Map Visualization**: Geographic plotting of networking nodes.
--   [ ] **Push Notifications**: FCM integration for background critical alerts.
 
 ## ✅ Testing
 

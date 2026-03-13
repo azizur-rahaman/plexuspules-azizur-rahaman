@@ -6,6 +6,7 @@ import 'package:plexuspules/firebase_options.dart';
 import 'package:plexuspules/app.dart';
 import 'package:plexuspules/core/di/injection.dart';
 import 'package:plexuspules/core/services/hive_service.dart';
+import 'package:plexuspules/core/services/push_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,5 +17,6 @@ void main() async {
   await Hive.initFlutter();
   await configureDependencies();
   await getIt<HiveService>().init();
+  await getIt<PushNotificationService>().initialize();
   runApp(const PlexusPulseApp());
 }

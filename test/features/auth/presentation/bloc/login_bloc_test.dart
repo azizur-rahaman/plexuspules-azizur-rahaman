@@ -13,11 +13,17 @@ import '../../../../helpers/test_helpers.dart';
 void main() {
   late LoginBloc bloc;
   late MockLoginUseCase mockLoginUseCase;
+  late MockPushNotificationService mockPushNotificationService;
 
   setUp(() {
     registerTestFallbacks();
     mockLoginUseCase = MockLoginUseCase();
-    bloc = LoginBloc(mockLoginUseCase);
+    mockPushNotificationService = MockPushNotificationService();
+    
+    when(() => mockPushNotificationService.registerToken())
+        .thenAnswer((_) async => {});
+
+    bloc = LoginBloc(mockLoginUseCase, mockPushNotificationService);
   });
 
   const tAuthResponse = AuthResponse(
@@ -33,7 +39,7 @@ void main() {
   });
 
   blocTest<LoginBloc, LoginState>(
-    'emits [LoginLoading, LoginSuccess] when login is successful',
+    'emits [LoginLoading, LoginSuccess] and registers FCM token when login is successful',
     build: () {
       when(() => mockLoginUseCase(any()))
           .thenAnswer((_) async => const Right(tAuthResponse));
@@ -47,6 +53,9 @@ void main() {
       const LoginLoading(),
       const LoginSuccess(tAuthResponse),
     ],
+    verify: (_) {
+      verify(() => mockPushNotificationService.registerToken()).called(1);
+    },
   );
 
   blocTest<LoginBloc, LoginState>(

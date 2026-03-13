@@ -75,6 +75,7 @@ import '../../features/profile/presentation/blocs/theme/theme_bloc.dart'
 import '../network/dio_client.dart' as _i667;
 import '../network/network_info.dart' as _i932;
 import '../services/hive_service.dart' as _i1047;
+import '../services/push_notification_service.dart' as _i63;
 import '../services/secure_storage_service.dart' as _i535;
 import 'register_module.dart' as _i291;
 
@@ -172,6 +173,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i652.DashboardBloc>(
       () => _i652.DashboardBloc(gh<_i639.GetDashboardMetrics>()),
+    );
+    gh.lazySingleton<_i63.PushNotificationService>(
+      () => _i63.PushNotificationService(
+        gh<_i894.ProfileRepository>(),
+        gh<_i852.AuthLocalDataSource>(),
+      ),
     );
     gh.factory<_i24.AlertsBloc>(() => _i24.AlertsBloc(gh<_i406.GetAlerts>()));
     gh.factory<_i990.LoginBloc>(
