@@ -5,6 +5,7 @@ import 'package:plexuspules/features/devices/presentation/pages/devices/devices_
 import 'package:plexuspules/features/devices/presentation/pages/device_detail/device_detail_page.dart';
 import 'package:plexuspules/features/alerts/presentation/pages/alerts/alerts_page.dart';
 import 'package:plexuspules/features/profile/presentation/pages/profile/profile_page.dart';
+import 'package:plexuspules/features/profile/presentation/pages/settings/notification_settings_page.dart';
 import 'package:plexuspules/features/performance/presentation/pages/performance/performance_page.dart';
 import 'package:plexuspules/core/navigation/navigation_shell_page.dart';
 import 'package:plexuspules/features/splash/presentation/pages/splash_screen.dart';
@@ -18,6 +19,7 @@ class AppRouter {
   static const String alerts = '/alerts';
   static const String performance = '/performance';
   static const String profile = '/profile';
+  static const String notificationSettings = '/profile/notifications';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -75,6 +77,12 @@ class AppRouter {
               GoRoute(
                 path: profile,
                 builder: (context, state) => const ProfilePage(),
+                routes: [
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) => const NotificationSettingsPage(),
+                  ),
+                ],
               ),
             ],
           ),

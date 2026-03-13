@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_bloc.dart';
 import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_event.dart';
 import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_state.dart';
+import '../../bloc/profile_bloc.dart';
+import '../../bloc/profile_event.dart';
+import '../../bloc/profile_state.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -13,220 +17,233 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(AppSizes.p24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Header Logo
-              Center(
-                child: Image.asset('assets/brand-logo-icon.png', height: 32.h),
-              ),
-              AppSizes.gap32,
-
-              // Profile Avatar Section
-              Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4.w),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 50.r,
-                      backgroundColor: theme.brightness == Brightness.light
-                          ? const Color(0xffBDCBD0)
-                          : theme.colorScheme.surfaceContainerHighest,
-                      child: Icon(
-                        Icons.person,
-                        size: 60.r,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 4.w,
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.edit, size: 14.r, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              AppSizes.gap16,
-
-              // Name and Email
-              Text(
-                'Admin',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state.status == ProfileStatus.logoutSuccess) {
+          context.go('/login');
+        }
+        if (state.status == ProfileStatus.error && state.message != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message!)),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(AppSizes.p24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // ... rest of existing code ...
+                // Header Logo
+                Center(
+                  child: Image.asset('assets/brand-logo-icon.png', height: 32.h),
                 ),
-              ),
-              AppSizes.gap4,
-              Text(
-                'admin@plexus.com',
-                style: theme.textTheme.bodyMedium,
-              ),
-              AppSizes.gap16,
+                AppSizes.gap32,
 
-              // Status Badge
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.p12,
-                  vertical: AppSizes.p4,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE2EDEA), // Pale green from mockup
-                  borderRadius: BorderRadius.circular(AppSizes.radiusCircular),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                // Profile Avatar Section
+                Stack(
                   children: [
                     Container(
-                      width: 8.r,
-                      height: 8.r,
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                      ),
-                    ),
-                    AppSizes.gap8,
-                    Text(
-                      'SYSTEM ADMINISTRATOR',
-                      style: TextStyle(
-                        fontSize: AppSizes.font10,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: AppSizes.p40),
-
-              // Application Settings Header
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'APPLICATION SETTINGS',
-                  style: TextStyle(
-                    fontSize: AppSizes.font12,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondary.withValues(alpha: 0.7),
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ),
-              AppSizes.gap12,
-
-              // Settings Card
-              Container(
-                decoration: BoxDecoration(
-                  color: theme.cardTheme.color,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-                  border: Border.all(
-                    color: theme.brightness == Brightness.light
-                        ? AppColors.cardBorder
-                        : AppColors.cardBorderDark,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    BlocBuilder<ThemeBloc, ThemeState>(
-                      builder: (context, state) {
-                        return _SettingsTile(
-                          icon: Icons.dark_mode_outlined,
-                          title: 'Dark Mode',
-                          subtitle: 'Adjust the visual appearance',
-                          trailing: Switch.adaptive(
-                            value: state.themeMode == ThemeMode.dark,
-                            onChanged: (val) {
-                              context.read<ThemeBloc>().add(
-                                    ThemeChanged(
-                                      val ? ThemeMode.dark : ThemeMode.light,
-                                    ),
-                                  );
-                            },
-                            activeTrackColor: AppColors.primary,
+                        border: Border.all(color: Colors.white, width: 4.w),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
                           ),
-                        );
-                      },
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 50.r,
+                        backgroundColor: theme.brightness == Brightness.light
+                            ? const Color(0xffBDCBD0)
+                            : theme.colorScheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.person,
+                          size: 60.r,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
+                      ),
                     ),
-                    const Divider(height: 1, indent: 56),
-                    _SettingsTile(
-                      icon: Icons.notifications_none_outlined,
-                      title: 'Notification Settings',
-                      subtitle: 'Alerts, push & email preferences',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              AppSizes.gap32,
-
-              // Logout Button
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-                  ),
-                  minimumSize: const Size(double.infinity, 0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.logout_outlined),
-                    AppSizes.gap8,
-                    Text(
-                      'Logout from PlexusPulse',
-                      style: TextStyle(
-                        fontSize: AppSizes.font16,
-                        fontWeight: FontWeight.bold,
+                    Positioned(
+                      bottom: 0,
+                      right: 4.w,
+                      child: Container(
+                        padding: EdgeInsets.all(6.w),
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.edit, size: 14.r, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
-              ),
-              AppSizes.gap24,
+                AppSizes.gap16,
 
-              // Version Info
-              Text(
-                'VERSION 4.2.0-STABLE | BUILD 8812',
-                style: TextStyle(
-                  fontSize: AppSizes.font10,
-                  color: AppColors.textSecondary.withValues(alpha: 0.5),
-                  fontWeight: FontWeight.w500,
+                // Name and Email
+                Text(
+                  'Admin',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              AppSizes.gap16,
-            ],
+                AppSizes.gap4,
+                Text(
+                  'admin@plexus.com',
+                  style: theme.textTheme.bodyMedium,
+                ),
+                AppSizes.gap16,
+
+                // Status Badge
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.p12,
+                    vertical: AppSizes.p4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2EDEA), // Pale green from mockup
+                    borderRadius: BorderRadius.circular(AppSizes.radiusCircular),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8.r,
+                        height: 8.r,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      AppSizes.gap8,
+                      Text(
+                        'SYSTEM ADMINISTRATOR',
+                        style: TextStyle(
+                          fontSize: AppSizes.font10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: AppSizes.p40),
+
+                // Application Settings Header
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'APPLICATION SETTINGS',
+                    style: TextStyle(
+                      fontSize: AppSizes.font12,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textSecondary.withValues(alpha: 0.7),
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+                AppSizes.gap12,
+
+                // Settings Card
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.cardTheme.color,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+                    border: Border.all(
+                      color: theme.brightness == Brightness.light
+                          ? AppColors.cardBorder
+                          : AppColors.cardBorderDark,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, state) {
+                          return _SettingsTile(
+                            icon: Icons.dark_mode_outlined,
+                            title: 'Dark Mode',
+                            subtitle: 'Adjust the visual appearance',
+                            trailing: Switch.adaptive(
+                              value: state.themeMode == ThemeMode.dark,
+                              onChanged: (val) {
+                                context.read<ThemeBloc>().add(
+                                      ThemeChanged(
+                                        val ? ThemeMode.dark : ThemeMode.light,
+                                      ),
+                                    );
+                              },
+                              activeTrackColor: AppColors.primary,
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 56),
+                      _SettingsTile(
+                        icon: Icons.notifications_none_outlined,
+                        title: 'Notification Settings',
+                        subtitle: 'Alerts, push & email preferences',
+                        onTap: () => context.push('/profile/notifications'),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSizes.gap32,
+
+                // Logout Button
+                ElevatedButton(
+                  onPressed: () => context.read<ProfileBloc>().add(LogoutRequested()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: AppSizes.p16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                    ),
+                    minimumSize: const Size(double.infinity, 0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.logout_outlined),
+                      AppSizes.gap8,
+                      Text(
+                        'Logout from PlexusPulse',
+                        style: TextStyle(
+                          fontSize: AppSizes.font16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AppSizes.gap24,
+
+                // Version Info
+                Text(
+                  'VERSION 4.2.0-STABLE | BUILD 8812',
+                  style: TextStyle(
+                    fontSize: AppSizes.font10,
+                    color: AppColors.textSecondary.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                AppSizes.gap16,
+              ],
+            ),
           ),
         ),
       ),

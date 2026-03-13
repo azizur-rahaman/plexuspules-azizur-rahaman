@@ -26,7 +26,7 @@ import '../../features/auth/presentation/bloc/login_bloc.dart' as _i990;
 import '../../features/dashboard/presentation/bloc/dashboard_bloc.dart'
     as _i652;
 import '../../features/devices/presentation/bloc/device_detail_bloc.dart'
-    as _i518;
+    as _i722;
 import '../../features/devices/presentation/bloc/devices_bloc.dart' as _i517;
 import '../../features/monitoring/data/datasources/monitoring_remote_data_source.dart'
     as _i1059;
@@ -39,6 +39,12 @@ import '../../features/monitoring/domain/usecases/get_dashboard_metrics.dart'
 import '../../features/monitoring/domain/usecases/get_device_details.dart'
     as _i91;
 import '../../features/monitoring/domain/usecases/get_devices.dart' as _i249;
+import '../../features/profile/data/datasources/profile_remote_data_source.dart'
+    as _i847;
+import '../../features/profile/data/repositories/profile_repository_impl.dart'
+    as _i334;
+import '../../features/profile/domain/repositories/profile_repository.dart'
+    as _i894;
 import '../../features/profile/presentation/blocs/theme/theme_bloc.dart'
     as _i766;
 import '../network/dio_client.dart' as _i667;
@@ -69,22 +75,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i667.DioClient>(
       () => _i667.DioClient(gh<_i535.SecureStorageService>()),
     );
-    gh.factory<_i652.DashboardBloc>(
-      () => _i652.DashboardBloc(gh<_i74.GetDashboardMetrics>()),
-    );
     gh.lazySingleton<_i932.NetworkInfo>(
       () => _i932.NetworkInfoImpl(gh<_i895.Connectivity>()),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i107.AuthRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
+    gh.lazySingleton<_i847.ProfileRemoteDataSource>(
+      () => _i847.ProfileRemoteDataSourceImpl(gh<_i667.DioClient>()),
+    );
     gh.lazySingleton<_i852.AuthLocalDataSource>(
       () => _i852.AuthLocalDataSourceImpl(gh<_i535.SecureStorageService>()),
-    );
-    gh.factory<_i517.DevicesBloc>(
-        () => _i517.DevicesBloc(gh<_i249.GetDevices>()));
-    gh.factory<_i518.DeviceDetailBloc>(
-      () => _i518.DeviceDetailBloc(gh<_i91.GetDeviceDetails>()),
     );
     gh.lazySingleton<_i1059.MonitoringRemoteDataSource>(
       () => _i1059.MonitoringRemoteDataSourceImpl(gh<_i667.DioClient>()),
@@ -98,6 +99,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i787.AuthRepository>(
       () => _i153.AuthRepositoryImpl(
         gh<_i107.AuthRemoteDataSource>(),
+        gh<_i852.AuthLocalDataSource>(),
+        gh<_i932.NetworkInfo>(),
+      ),
+    );
+    gh.lazySingleton<_i894.ProfileRepository>(
+      () => _i334.ProfileRepositoryImpl(
+        gh<_i847.ProfileRemoteDataSource>(),
         gh<_i852.AuthLocalDataSource>(),
         gh<_i932.NetworkInfo>(),
       ),
@@ -116,6 +124,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i990.LoginBloc>(
       () => _i990.LoginBloc(gh<_i188.LoginUseCase>()),
+    );
+    gh.factory<_i722.DeviceDetailBloc>(
+      () => _i722.DeviceDetailBloc(gh<_i91.GetDeviceDetails>()),
+    );
+    gh.factory<_i652.DashboardBloc>(
+      () => _i652.DashboardBloc(gh<_i74.GetDashboardMetrics>()),
+    );
+    gh.factory<_i517.DevicesBloc>(
+      () => _i517.DevicesBloc(gh<_i249.GetDevices>()),
     );
     return this;
   }

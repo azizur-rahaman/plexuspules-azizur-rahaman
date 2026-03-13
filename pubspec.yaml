@@ -52,6 +52,8 @@ dependencies:
   fl_chart: ^0.70.2
   stream_transform: ^2.1.0
   flutter_dotenv: ^6.0.0
+  firebase_core: any
+  firebase_messaging: any
 
 dev_dependencies:
   flutter_test:

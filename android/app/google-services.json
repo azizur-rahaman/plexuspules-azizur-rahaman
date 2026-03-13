@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "988422204034",
+    "project_id": "plexus-cloud-fcm",
+    "storage_bucket": "plexus-cloud-fcm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988422204034:android:90fc7d08cb677c5acde29b",
+        "android_client_info": {
+          "package_name": "com.pleuxltd.plexuspules"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_IxkOjuzhOHx0cBIlbiuWpgJPi0mdtR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
