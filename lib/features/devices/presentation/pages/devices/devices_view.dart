@@ -188,15 +188,24 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onSelect,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected
+              ? AppColors.primary
+              : (theme.brightness == Brightness.light
+                  ? Colors.white
+                  : theme.colorScheme.surface),
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.cardBorder,
+            color: isSelected
+                ? AppColors.primary
+                : (theme.brightness == Brightness.light
+                    ? AppColors.cardBorder
+                    : theme.colorScheme.outlineVariant),
           ),
           boxShadow: isSelected
               ? [
@@ -211,7 +220,11 @@ class _FilterChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected
+                ? Colors.white
+                : (theme.brightness == Brightness.light
+                    ? AppColors.textSecondary
+                    : theme.colorScheme.onSurfaceVariant),
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),

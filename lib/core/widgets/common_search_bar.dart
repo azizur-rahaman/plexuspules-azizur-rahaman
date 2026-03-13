@@ -16,10 +16,16 @@ class CommonSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.brightness == Brightness.light
+            ? Colors.white
+            : theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(AppSizes.p12),
+        border: theme.brightness == Brightness.dark
+            ? Border.all(color: theme.colorScheme.outlineVariant)
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),

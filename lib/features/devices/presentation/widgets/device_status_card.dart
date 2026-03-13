@@ -24,13 +24,18 @@ class DeviceStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isOnline = status == DeviceStatus.online;
+    final theme = Theme.of(context);
 
     return Container(
       padding: EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(AppSizes.radiusXLarge),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: theme.brightness == Brightness.light
+              ? AppColors.cardBorder
+              : AppColors.cardBorderDark,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -47,12 +52,14 @@ class DeviceStatusCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppSizes.p12),
                 decoration: BoxDecoration(
-                  color: AppColors.background.withValues(alpha: 0.5),
+                  color: theme.brightness == Brightness.light
+                      ? AppColors.background.withValues(alpha: 0.5)
+                      : theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                 ),
                 child: Icon(
                   icon,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                   size: AppSizes.p24,
                 ),
               ),
@@ -63,16 +70,13 @@ class DeviceStatusCard extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       'IP: $ipAddress',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -81,7 +85,7 @@ class DeviceStatusCard extends StatelessWidget {
             ],
           ),
           AppSizes.gap20,
-          const Divider(color: AppColors.divider),
+          Divider(color: theme.dividerTheme.color),
           AppSizes.gap20,
           Row(
             children: [
@@ -160,14 +164,14 @@ class _InfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 10,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
           ),
@@ -175,15 +179,14 @@ class _InfoTile extends StatelessWidget {
         const SizedBox(height: 4),
         Row(
           children: [
-            Icon(icon, size: 16, color: AppColors.primary),
+            Icon(icon, size: 16, color: theme.colorScheme.primary),
             const SizedBox(width: 6),
             Expanded(
               child: Text(
                 value,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

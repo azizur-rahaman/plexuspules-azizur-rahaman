@@ -20,7 +20,7 @@ class PerformanceView extends StatelessWidget {
               Text(
                 'Performance Analytics',
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  color: const Color(0xFF2F6B4F),
+                  color: theme.colorScheme.primary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -28,11 +28,12 @@ class PerformanceView extends StatelessWidget {
               Text(
                 'Real-time system health monitoring',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF64748B),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 32),
               _buildChartCard(
+                context: context,
                 title: 'CPU USAGE',
                 value: '42.8%',
                 change: '-2.4%',
@@ -56,6 +57,7 @@ class PerformanceView extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               _buildChartCard(
+                context: context,
                 title: 'MEMORY USAGE',
                 value: '6.4 GB',
                 change: '+0.8%',
@@ -87,6 +89,7 @@ class PerformanceView extends StatelessWidget {
   }
 
   Widget _buildChartCard({
+    required BuildContext context,
     required String title,
     required String value,
     required String change,
@@ -97,11 +100,15 @@ class PerformanceView extends StatelessWidget {
     required double yInterval,
     String Function(double)? yLabel,
   }) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(16),
+        border: theme.brightness == Brightness.dark
+            ? Border.all(color: theme.colorScheme.outlineVariant)
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -149,10 +156,9 @@ class PerformanceView extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              color: Color(0xFF0F172A),
-              fontSize: 32,
+            style: theme.textTheme.displaySmall?.copyWith(
               fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 24),
@@ -166,7 +172,7 @@ class PerformanceView extends StatelessWidget {
                   horizontalInterval: yInterval,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: const Color(0xFF94A3B8).withValues(alpha: 0.2),
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
                       strokeWidth: 1,
                       dashArray: [5, 5],
                     );
@@ -208,8 +214,8 @@ class PerformanceView extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             text,
-                            style: const TextStyle(
-                              color: Color(0xFF94A3B8),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                               fontSize: 10,
                             ),
                           ),
@@ -224,8 +230,8 @@ class PerformanceView extends StatelessWidget {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           yLabel?.call(value) ?? '${value.toInt()}%',
-                          style: const TextStyle(
-                            color: Color(0xFF94A3B8),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                             fontSize: 10,
                           ),
                         );

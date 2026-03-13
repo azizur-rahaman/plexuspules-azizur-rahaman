@@ -49,4 +49,14 @@ class AppColors {
 
   /// Splash Colors
   static const Color splashGradientEnd = Color(0xFFFFF2DD);
+
+  /// Dark Mode Colors
+  static const Color backgroundDark = Color(0xFF0F172A);
+  static const Color surfaceDark = Color(0xFF1E293B);
+  static const Color cardDark = Color(0xFF1E293B);
+  static const Color cardBorderDark = Color(0xFF334155);
+  static const Color textPrimaryDark = Color(0xFFF8FAFC);
+  static const Color textSecondaryDark = Color(0xFF94A3B8);
+  static const Color textMutedDark = Color(0xFF64748B);
+  static const Color dividerDark = Color(0xFF334155);
 }

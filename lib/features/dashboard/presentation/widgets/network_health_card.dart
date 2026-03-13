@@ -57,7 +57,9 @@ class NetworkHealthCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage / 100,
               minHeight: 8,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade200
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
             ),
           ),

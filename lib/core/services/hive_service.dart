@@ -26,12 +26,22 @@ class HiveService {
   // Convenience helpers for the settings box
   // ---------------------------------------------------------------------------
 
+  static const String _themeModeKey = 'theme_mode';
+
   Future<void> put(String key, dynamic value) async {
     await settingsBox.put(key, value);
   }
 
   T? get<T>(String key, {T? defaultValue}) {
     return settingsBox.get(key, defaultValue: defaultValue) as T?;
+  }
+
+  Future<void> setThemeMode(String mode) async {
+    await put(_themeModeKey, mode);
+  }
+
+  String getThemeMode() {
+    return get<String>(_themeModeKey, defaultValue: 'light')!;
   }
 
   Future<void> delete(String key) async {

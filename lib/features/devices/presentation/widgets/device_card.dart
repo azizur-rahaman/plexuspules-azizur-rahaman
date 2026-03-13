@@ -24,120 +24,122 @@ class DeviceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isOnline = status == DeviceStatus.online;
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: () => context.push('/device-detail/$name'),
       child: Container(
         padding: EdgeInsets.all(AppSizes.p16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(AppSizes.p16),
-        border: Border.all(color: AppColors.cardBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+        decoration: BoxDecoration(
+          color: theme.cardTheme.color,
+          borderRadius: BorderRadius.circular(AppSizes.p16),
+          border: Border.all(
+            color: theme.brightness == Brightness.light
+                ? AppColors.cardBorder
+                : AppColors.cardBorderDark,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Device Icon Container
-          Container(
-            padding: EdgeInsets.all(AppSizes.p12),
-            decoration: BoxDecoration(
-              color: AppColors.background.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(AppSizes.p12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: AppSizes.p24,
+          ],
+        ),
+        child: Row(
+          children: [
+            // Device Icon Container
+            Container(
+              padding: EdgeInsets.all(AppSizes.p12),
+              decoration: BoxDecoration(
+                color: theme.brightness == Brightness.light
+                    ? AppColors.background.withValues(alpha: 0.5)
+                    : theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(AppSizes.p12),
+              ),
+              child: Icon(
+                icon,
+                color: theme.colorScheme.primary,
+                size: AppSizes.p24,
+              ),
             ),
-          ),
-          AppSizes.gap16,
-          // Device Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
-                    ),
-                    // Status Badge
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+            AppSizes.gap16,
+            // Device Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: (isOnline ? AppColors.healthy : AppColors.critical)
-                            .withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: isOnline ? AppColors.healthy : AppColors.critical,
-                              shape: BoxShape.circle,
+                      // Status Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: (isOnline ? AppColors.healthy : AppColors.critical)
+                              .withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: isOnline ? AppColors.healthy : AppColors.critical,
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            isOnline ? 'ONLINE' : 'OFFLINE',
-                            style: TextStyle(
-                              color: isOnline ? AppColors.healthy : AppColors.critical,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(width: 6),
+                            Text(
+                              isOnline ? 'ONLINE' : 'OFFLINE',
+                              style: TextStyle(
+                                color: isOnline ? AppColors.healthy : AppColors.critical,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  ipAddress,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    ipAddress,
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                        color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                       ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_outlined,
-                      size: 14,
-                      color: AppColors.textMuted,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      location,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 4),
+                      Text(
+                        location,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
