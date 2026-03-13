@@ -56,6 +56,11 @@ class NavigationShellPage extends StatelessWidget {
               label: 'DEVICES',
             ),
             NavigationDestination(
+              icon: const Icon(Icons.analytics_outlined, color: Color(0xFF94A3B8)),
+              selectedIcon: const Icon(Icons.analytics, color: Color(0xFF2F6B4F)),
+              label: 'PERFORMANCE',
+            ),
+            NavigationDestination(
               icon: const Icon(Icons.person_outline, color: Color(0xFF94A3B8)),
               selectedIcon: const Icon(Icons.person, color: Color(0xFF2F6B4F)),
               label: 'PROFILE',

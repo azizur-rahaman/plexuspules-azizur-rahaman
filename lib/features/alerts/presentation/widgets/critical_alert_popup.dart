@@ -132,7 +132,10 @@ class CriticalAlertPopup extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: onViewDevice,
+                onPressed: () {
+                  Navigator.pop(context);
+                  onViewDevice();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
@@ -159,7 +162,10 @@ class CriticalAlertPopup extends StatelessWidget {
             ),
             AppSizes.gap12,
             TextButton(
-              onPressed: onDismiss,
+              onPressed: () {
+                Navigator.pop(context);
+                onDismiss();
+              },
               child: Text(
                 'Dismiss',
                 style: TextStyle(

@@ -30,12 +30,9 @@ class _DashboardViewState extends State<DashboardView> {
       location: 'Data Center A',
       timeDetected: 'Just now',
       onViewDevice: () {
-        Navigator.pop(context);
         // TODO: Navigate to device details
       },
-      onDismiss: () {
-        Navigator.pop(context);
-      },
+      onDismiss: () {},
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:plexuspules/features/devices/presentation/pages/devices/devices_
 import 'package:plexuspules/features/devices/presentation/pages/device_detail/device_detail_page.dart';
 import 'package:plexuspules/features/alerts/presentation/pages/alerts/alerts_page.dart';
 import 'package:plexuspules/features/profile/presentation/pages/profile/profile_page.dart';
+import 'package:plexuspules/features/performance/presentation/pages/performance/performance_page.dart';
 import 'package:plexuspules/core/navigation/navigation_shell_page.dart';
 import 'package:plexuspules/features/splash/presentation/pages/splash_screen.dart';
 
@@ -15,6 +16,7 @@ class AppRouter {
   static const String devices = '/devices';
   static const String deviceDetail = '/device-detail/:id';
   static const String alerts = '/alerts';
+  static const String performance = '/performance';
   static const String profile = '/profile';
 
   static final GoRouter router = GoRouter(
@@ -57,6 +59,14 @@ class AppRouter {
               GoRoute(
                 path: devices,
                 builder: (context, state) => const DevicesPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: performance,
+                builder: (context, state) => const PerformancePage(),
               ),
             ],
           ),
