@@ -3,10 +3,41 @@ import 'package:plexuspules/core/constants/app_sizes.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/stat_card.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/network_health_card.dart';
 import 'package:plexuspules/features/dashboard/presentation/widgets/alert_item.dart';
+import 'package:plexuspules/features/alerts/presentation/widgets/critical_alert_popup.dart';
 import 'package:plexuspules/core/widgets/common_app_bar.dart';
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
+
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCriticalAlert();
+    });
+  }
+
+  void _showCriticalAlert() {
+    CriticalAlertPopup.show(
+      context,
+      deviceName: 'Router-01',
+      ipAddress: '192.168.1.50',
+      location: 'Data Center A',
+      timeDetected: 'Just now',
+      onViewDevice: () {
+        Navigator.pop(context);
+        // TODO: Navigate to device details
+      },
+      onDismiss: () {
+        Navigator.pop(context);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +50,6 @@ class DashboardView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Stats Grid
-
               // Stats Grid
               GridView.count(
                 crossAxisCount: 2,

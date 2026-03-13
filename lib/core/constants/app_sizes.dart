@@ -5,6 +5,7 @@ class AppSizes {
   AppSizes._();
 
   /// Padding & Margin Dimensions
+  static double get p2 => 2.w;
   static double get p4 => 4.w;
   static double get p8 => 8.w;
   static double get p12 => 12.w;
