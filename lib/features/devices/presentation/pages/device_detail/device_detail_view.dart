@@ -14,6 +14,7 @@ class DeviceDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // In a real app, we'd fetch device data based on deviceId
     const deviceName = 'Core-Switch-01';
     const ipAddress = '192.168.1.1';
@@ -23,7 +24,7 @@ class DeviceDetailView extends StatelessWidget {
     const icon = Icons.router_outlined;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CommonAppBar.brand(showBottomBorder: false),
       body: SafeArea(
         child: SingleChildScrollView(

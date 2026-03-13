@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
+import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_bloc.dart';
+import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_event.dart';
+import 'package:plexuspules/features/profile/presentation/blocs/theme/theme_state.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(AppSizes.p24),
@@ -39,7 +44,9 @@ class ProfileView extends StatelessWidget {
                     ),
                     child: CircleAvatar(
                       radius: 50.r,
-                      backgroundColor: const Color(0xffBDCBD0),
+                      backgroundColor: theme.brightness == Brightness.light
+                          ? const Color(0xffBDCBD0)
+                          : theme.colorScheme.surfaceContainerHighest,
                       child: Icon(
                         Icons.person,
                         size: 60.r,
@@ -66,19 +73,14 @@ class ProfileView extends StatelessWidget {
               // Name and Email
               Text(
                 'Admin',
-                style: TextStyle(
-                  fontSize: AppSizes.font24,
+                style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
                 ),
               ),
               AppSizes.gap4,
               Text(
                 'admin@plexus.com',
-                style: TextStyle(
-                  fontSize: AppSizes.font16,
-                  color: AppColors.textSecondary,
-                ),
+                style: theme.textTheme.bodyMedium,
               ),
               AppSizes.gap16,
 
@@ -136,8 +138,13 @@ class ProfileView extends StatelessWidget {
               // Settings Card
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+                  border: Border.all(
+                    color: theme.brightness == Brightness.light
+                        ? AppColors.cardBorder
+                        : AppColors.cardBorderDark,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.03),
@@ -148,15 +155,25 @@ class ProfileView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _SettingsTile(
-                      icon: Icons.dark_mode_outlined,
-                      title: 'Dark Mode',
-                      subtitle: 'Adjust the visual appearance',
-                      trailing: Switch.adaptive(
-                        value: false,
-                        onChanged: (val) {},
-                        activeTrackColor: AppColors.primary,
-                      ),
+                    BlocBuilder<ThemeBloc, ThemeState>(
+                      builder: (context, state) {
+                        return _SettingsTile(
+                          icon: Icons.dark_mode_outlined,
+                          title: 'Dark Mode',
+                          subtitle: 'Adjust the visual appearance',
+                          trailing: Switch.adaptive(
+                            value: state.themeMode == ThemeMode.dark,
+                            onChanged: (val) {
+                              context.read<ThemeBloc>().add(
+                                    ThemeChanged(
+                                      val ? ThemeMode.dark : ThemeMode.light,
+                                    ),
+                                  );
+                            },
+                            activeTrackColor: AppColors.primary,
+                          ),
+                        );
+                      },
                     ),
                     const Divider(height: 1, indent: 56),
                     _SettingsTile(
@@ -239,25 +256,26 @@ class _SettingsTile extends StatelessWidget {
       leading: Container(
         padding: EdgeInsets.all(8.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF0F5F2),
+          color: Theme.of(context).brightness == Brightness.light
+              ? const Color(0xFFF0F5F2)
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
         ),
-        child: Icon(icon, color: AppColors.primary, size: 20.r),
+        child: Icon(
+          icon,
+          color: Theme.of(context).brightness == Brightness.light
+              ? AppColors.primary
+              : Colors.white,
+          size: 20.r,
+        ),
       ),
       title: Text(
         title,
-        style: TextStyle(
-          fontSize: AppSizes.font16,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          fontSize: AppSizes.font12,
-          color: AppColors.textSecondary,
-        ),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing:
           trailing ??

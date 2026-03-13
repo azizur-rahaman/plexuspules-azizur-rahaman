@@ -20,12 +20,17 @@ class CircularUsageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(AppSizes.radiusXLarge),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: theme.brightness == Brightness.light
+              ? AppColors.cardBorder
+              : AppColors.cardBorderDark,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -40,9 +45,8 @@ class CircularUsageCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               title,
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.1,
               ),
@@ -58,17 +62,16 @@ class CircularUsageCard extends StatelessWidget {
                 child: CircularProgressIndicator(
                   value: progress,
                   strokeWidth: 10,
-                  backgroundColor: progressColor.withValues(alpha: 0.1),
+                  backgroundColor: progressColor.withValues(alpha: 0.15),
                   color: progressColor,
                   strokeCap: StrokeCap.round,
                 ),
               ),
               Text(
                 '${(progress * 100).toInt()}%',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -79,14 +82,13 @@ class CircularUsageCard extends StatelessWidget {
               Icon(
                 isTrendPositive ? Icons.trending_up : Icons.trending_down,
                 size: 14,
-                color: AppColors.textMuted,
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               ),
               const SizedBox(width: 4),
               Text(
                 trend,
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 12,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                 ),
               ),
             ],

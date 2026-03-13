@@ -23,6 +23,8 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart'
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
 import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/presentation/bloc/login_bloc.dart' as _i990;
+import '../../features/profile/presentation/blocs/theme/theme_bloc.dart'
+    as _i766;
 import '../network/network_info.dart' as _i932;
 import '../services/hive_service.dart' as _i1047;
 import '../services/secure_storage_service.dart' as _i535;
@@ -43,6 +45,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1047.HiveService>(() => _i1047.HiveService());
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i107.AuthRemoteDataSourceImpl(),
+    );
+    gh.factory<_i766.ThemeBloc>(
+      () => _i766.ThemeBloc(gh<_i1047.HiveService>()),
     );
     gh.lazySingleton<_i535.SecureStorageService>(
       () => _i535.SecureStorageService(gh<_i558.FlutterSecureStorage>()),

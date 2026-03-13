@@ -8,12 +8,17 @@ class PerformanceGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(AppSizes.radiusXLarge),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: theme.brightness == Brightness.light
+              ? AppColors.cardBorder
+              : AppColors.cardBorderDark,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -30,28 +35,23 @@ class PerformanceGraph extends StatelessWidget {
             children: [
               Text(
                 'Performance',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.background,
+                  color: theme.brightness == Brightness.light
+                      ? AppColors.background
+                      : theme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                 ),
-                child: Row(
-                  children: [
-                    Text(
-                      'Last 60m',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  'Last 60m',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
@@ -66,12 +66,12 @@ class PerformanceGraph extends StatelessWidget {
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
-                    getTooltipColor: (_) => AppColors.textPrimary,
+                    getTooltipColor: (_) => theme.colorScheme.primaryContainer,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
                         '${(rod.toY * 100).round()}%',
-                        const TextStyle(
-                          color: Colors.white,
+                        TextStyle(
+                          color: theme.colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.bold,
                         ),
                       );
@@ -82,18 +82,18 @@ class PerformanceGraph extends StatelessWidget {
                 gridData: const FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 barGroups: [
-                  _makeGroupData(0, 0.3),
-                  _makeGroupData(1, 0.5),
-                  _makeGroupData(2, 0.4),
-                  _makeGroupData(3, 0.2),
-                  _makeGroupData(4, 0.6),
-                  _makeGroupData(5, 0.7),
-                  _makeGroupData(6, 0.8),
-                  _makeGroupData(7, 0.4),
-                  _makeGroupData(8, 0.5),
-                  _makeGroupData(9, 0.3),
-                  _makeGroupData(10, 0.8),
-                  _makeGroupData(11, 0.5),
+                  _makeGroupData(context, 0, 0.3),
+                  _makeGroupData(context, 1, 0.5),
+                  _makeGroupData(context, 2, 0.4),
+                  _makeGroupData(context, 3, 0.2),
+                  _makeGroupData(context, 4, 0.6),
+                  _makeGroupData(context, 5, 0.7),
+                  _makeGroupData(context, 6, 0.8),
+                  _makeGroupData(context, 7, 0.4),
+                  _makeGroupData(context, 8, 0.5),
+                  _makeGroupData(context, 9, 0.3),
+                  _makeGroupData(context, 10, 0.8),
+                  _makeGroupData(context, 11, 0.5),
                 ],
               ),
             ),
@@ -104,17 +104,15 @@ class PerformanceGraph extends StatelessWidget {
             children: [
               Text(
                 '60M AGO',
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 10,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 'NOW',
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 10,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -125,15 +123,16 @@ class PerformanceGraph extends StatelessWidget {
     );
   }
 
-  BarChartGroupData _makeGroupData(int x, double y) {
+  BarChartGroupData _makeGroupData(BuildContext context, int x, double y) {
+    final theme = Theme.of(context);
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           toY: y,
           color: (y > 0.7)
-              ? AppColors.primary
-              : AppColors.primary.withValues(alpha: 0.2),
+              ? theme.colorScheme.primary
+              : theme.colorScheme.primary.withValues(alpha: 0.3),
           width: 8,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(4),
@@ -142,7 +141,9 @@ class PerformanceGraph extends StatelessWidget {
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 1,
-            color: AppColors.background,
+            color: theme.brightness == Brightness.light
+                ? AppColors.background
+                : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
           ),
         ),
       ],
