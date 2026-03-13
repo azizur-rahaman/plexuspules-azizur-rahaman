@@ -8,7 +8,7 @@ class AppColors {
   static const Color primaryLight = Color(0xFF3C7C5F);
 
   /// Backgrounds
-  static const Color background = Color(0xFFF5F1EA);
+  static const Color background = Colors.white;
   static const Color surface = Colors.white;
 
   /// Cards
