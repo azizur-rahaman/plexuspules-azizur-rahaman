@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:plexuspules/config/theme/app_colors.dart';
 import 'package:plexuspules/core/constants/app_sizes.dart';
@@ -7,22 +8,6 @@ class PerformanceGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mock data for the bar chart
-    final List<double> heights = [
-      0.3,
-      0.5,
-      0.4,
-      0.2,
-      0.6,
-      0.7,
-      0.8,
-      0.4,
-      0.5,
-      0.3,
-      0.8,
-      0.5
-    ];
-
     return Container(
       padding: EdgeInsets.all(AppSizes.p20),
       decoration: BoxDecoration(
@@ -74,26 +59,43 @@ class PerformanceGraph extends StatelessWidget {
           AppSizes.gap32,
           SizedBox(
             height: 120,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: heights.map((h) {
-                // Vary color slightly based on height or index to match mockup
-                final color = (h > 0.7) 
-                    ? AppColors.primary 
-                    : AppColors.primary.withValues(alpha: 0.2);
-                
-                return Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    height: h * 120,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: 1,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    getTooltipColor: (_) => AppColors.textPrimary,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${(rod.toY * 100).round()}%',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
-                );
-              }).toList(),
+                ),
+                titlesData: const FlTitlesData(show: false),
+                gridData: const FlGridData(show: false),
+                borderData: FlBorderData(show: false),
+                barGroups: [
+                  _makeGroupData(0, 0.3),
+                  _makeGroupData(1, 0.5),
+                  _makeGroupData(2, 0.4),
+                  _makeGroupData(3, 0.2),
+                  _makeGroupData(4, 0.6),
+                  _makeGroupData(5, 0.7),
+                  _makeGroupData(6, 0.8),
+                  _makeGroupData(7, 0.4),
+                  _makeGroupData(8, 0.5),
+                  _makeGroupData(9, 0.3),
+                  _makeGroupData(10, 0.8),
+                  _makeGroupData(11, 0.5),
+                ],
+              ),
             ),
           ),
           AppSizes.gap16,
@@ -120,6 +122,30 @@ class PerformanceGraph extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  BarChartGroupData _makeGroupData(int x, double y) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          color: (y > 0.7)
+              ? AppColors.primary
+              : AppColors.primary.withValues(alpha: 0.2),
+          width: 8,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+          backDrawRodData: BackgroundBarChartRodData(
+            show: true,
+            toY: 1,
+            color: AppColors.background,
+          ),
+        ),
+      ],
     );
   }
 }
