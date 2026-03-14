@@ -14,9 +14,11 @@ class DioClient {
   DioClient(this._secureStorageService) {
     _dio = Dio(
       BaseOptions(
-        baseUrl: kIsWeb || !defaultTargetPlatform.toString().contains('Android') 
-          ? dotenv.get('BASE_URL_LOCAL', fallback: 'http://localhost:3000/api') 
-          : dotenv.get('BASE_URL_ANDROID', fallback: 'http://10.0.2.2:3000/api'),
+        baseUrl: dotenv.get('ENVIRONMENT', fallback: 'development') == 'production'
+            ? dotenv.get('BASE_URL_PROD', fallback: 'https://backend-plexuspules-azizur-rahaman.onrender.com/api')
+            : (kIsWeb || !defaultTargetPlatform.toString().contains('Android')
+                ? dotenv.get('BASE_URL_STG', fallback: 'http://localhost:3000/api')
+                : dotenv.get('BASE_URL_STG_ANDROID', fallback: 'http://10.0.2.2:3000/api')),
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

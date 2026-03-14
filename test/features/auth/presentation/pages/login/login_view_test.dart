@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
@@ -24,18 +25,25 @@ void main() {
   });
 
   Widget createWidgetUnderTest() {
-    return MaterialApp(
-      home: BlocProvider<LoginBloc>.value(
-        value: mockLoginBloc,
-        child: const LoginView(),
+    return ScreenUtilInit(
+      designSize: const Size(393, 852),
+      builder: (context, child) => MaterialApp(
+        home: BlocProvider<LoginBloc>.value(
+          value: mockLoginBloc,
+          child: const LoginView(),
+        ),
       ),
     );
   }
 
   testWidgets('should show welcome text and sign in button', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+
     await tester.pumpWidget(createWidgetUnderTest());
-    await tester.pump(const Duration(milliseconds: 500)); // Handle initState delay
-    await tester.pump(); // Handle animation
+    await tester.pump(const Duration(milliseconds: 500)); 
+    await tester.pump(const Duration(milliseconds: 700)); // Finish 600ms animation
 
     expect(find.text('Welcome back'), findsOneWidget);
     expect(find.byType(PrimaryButton), findsOneWidget);
@@ -43,21 +51,29 @@ void main() {
   });
 
   testWidgets('should show loading indicator when state is LoginLoading', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+
     when(() => mockLoginBloc.state).thenReturn(const LoginLoading());
     when(() => mockLoginBloc.stream).thenAnswer((_) => Stream.value(const LoginLoading()));
 
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
 
     final primaryButton = tester.widget<PrimaryButton>(find.byType(PrimaryButton));
     expect(primaryButton.isLoading, true);
   });
 
   testWidgets('should add LoginSubmitted event when sign in button is pressed with valid form', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() => tester.view.resetPhysicalSize());
+
     await tester.pumpWidget(createWidgetUnderTest());
     await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
 
     await tester.enterText(find.byType(TextFormField).first, 'test@test.com');
     await tester.enterText(find.byType(TextFormField).last, 'password123');

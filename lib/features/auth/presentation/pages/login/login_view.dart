@@ -164,7 +164,9 @@ class _LoginFormSheet extends StatelessWidget {
             AppSizes.p32,
             AppSizes.p40 + MediaQuery.of(context).padding.bottom,
           ),
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
+            heightFactor: 1.0,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
               child: Form(
