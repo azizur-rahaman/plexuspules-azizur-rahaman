@@ -29,6 +29,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       transformer: throttleDroppable(_throttleDuration),
     );
     on<ChangeFilter>(_onChangeFilter);
+    on<RefreshDevices>(_onRefreshDevices);
     on<SearchChanged>(
       _onSearchChanged,
       transformer: throttleDroppable(const Duration(milliseconds: 300)),
@@ -42,7 +43,7 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
     _pollingTimer?.cancel();
     _pollingTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       if (state.status == DevicesStatus.success) {
-        add(const FetchDevices());
+        add(const RefreshDevices());
       }
     });
   }
@@ -154,6 +155,33 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
         devices: devices,
         hasReachedMax: devices.length < _pageSize,
       )),
+    );
+  }
+
+  Future<void> _onRefreshDevices(
+    RefreshDevices event,
+    Emitter<DevicesState> emit,
+  ) async {
+    final result = await _getDevices(GetDevicesParams(
+      page: 1,
+      limit: _pageSize,
+      search: state.searchQuery,
+      status: state.statusFilter?.name,
+    ));
+
+    result.fold(
+      (failure) {
+        event.completer?.complete();
+        // Silently fail for background refresh
+      },
+      (devices) {
+        emit(state.copyWith(
+          status: DevicesStatus.success,
+          devices: devices,
+          hasReachedMax: devices.length < _pageSize,
+        ));
+        event.completer?.complete();
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:plexuspules/features/devices/domain/entities/device.dart';
 
@@ -10,6 +11,14 @@ abstract class DevicesEvent extends Equatable {
 
 class FetchDevices extends DevicesEvent {
   const FetchDevices();
+}
+
+class RefreshDevices extends DevicesEvent {
+  final Completer<void>? completer;
+  const RefreshDevices({this.completer});
+
+  @override
+  List<Object?> get props => [completer];
 }
 
 class LoadMoreDevices extends DevicesEvent {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:equatable/equatable.dart';
 
 abstract class DashboardEvent extends Equatable {
@@ -12,5 +13,9 @@ class FetchDashboardMetrics extends DashboardEvent {
 }
 
 class RefreshDashboardMetrics extends DashboardEvent {
-  const RefreshDashboardMetrics();
+  final Completer<void>? completer;
+  const RefreshDashboardMetrics({this.completer});
+
+  @override
+  List<Object?> get props => [completer];
 }

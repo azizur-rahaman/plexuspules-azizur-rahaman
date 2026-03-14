@@ -30,6 +30,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     Emitter<DashboardState> emit,
   ) async {
     await _fetchData(emit);
+    event.completer?.complete();
   }
 
   Future<void> _fetchData(Emitter<DashboardState> emit) async {

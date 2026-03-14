@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -152,38 +153,48 @@ class _DevicesViewState extends State<DevicesView> {
                       }
                   }
 
-                  return ListView.separated(
-                    controller: _scrollController,
-                    padding: EdgeInsets.fromLTRB(
-                      AppSizes.p20,
-                      0,
-                      AppSizes.p20,
-                      AppSizes.p40,
-                    ),
-                    itemCount: state.hasReachedMax
-                        ? state.devices.length
-                        : state.devices.length + 1,
-                    separatorBuilder: (context, index) => AppSizes.gap16,
-                    itemBuilder: (context, index) {
-                      if (index < state.devices.length) {
-                        final device = state.devices[index];
-                        return DeviceCard(
-                          id: device.id,
-                          name: device.name,
-                          ipAddress: device.ipAddress,
-                          location: device.location,
-                          status: device.status,
-                          icon: device.status == DeviceStatus.online
-                              ? Icons.router_outlined
-                              : Icons.storage_outlined,
-                        );
-                      } else {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 32),
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      }
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      final completer = Completer<void>();
+                      context.read<DevicesBloc>().add(
+                            RefreshDevices(completer: completer),
+                          );
+                      return completer.future;
                     },
+                    child: ListView.separated(
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.fromLTRB(
+                        AppSizes.p20,
+                        0,
+                        AppSizes.p20,
+                        AppSizes.p40,
+                      ),
+                      itemCount: state.hasReachedMax
+                          ? state.devices.length
+                          : state.devices.length + 1,
+                      separatorBuilder: (context, index) => AppSizes.gap16,
+                      itemBuilder: (context, index) {
+                        if (index < state.devices.length) {
+                          final device = state.devices[index];
+                          return DeviceCard(
+                            id: device.id,
+                            name: device.name,
+                            ipAddress: device.ipAddress,
+                            location: device.location,
+                            status: device.status,
+                            icon: device.status == DeviceStatus.online
+                                ? Icons.router_outlined
+                                : Icons.storage_outlined,
+                          );
+                        } else {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 32),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                      },
+                    ),
                   );
                 },
               ),
