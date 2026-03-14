@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plexuspules/core/error/failures.dart';
 import 'package:plexuspules/features/auth/domain/entities/auth_response.dart';
-import 'package:plexuspules/features/auth/domain/usecases/login_usecase.dart';
+
 import 'package:plexuspules/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:plexuspules/features/auth/presentation/bloc/login_event.dart';
 import 'package:plexuspules/features/auth/presentation/bloc/login_state.dart';

@@ -182,7 +182,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i24.AlertsBloc>(() => _i24.AlertsBloc(gh<_i406.GetAlerts>()));
     gh.factory<_i990.LoginBloc>(
-      () => _i990.LoginBloc(gh<_i188.LoginUseCase>()),
+      () => _i990.LoginBloc(
+        gh<_i188.LoginUseCase>(),
+        gh<_i63.PushNotificationService>(),
+      ),
     );
     gh.lazySingleton<_i413.GetDeviceDetails>(
       () => _i413.GetDeviceDetails(gh<_i1072.DevicesRepository>()),
