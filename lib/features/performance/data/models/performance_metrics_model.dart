@@ -6,11 +6,11 @@ part 'performance_metrics_model.g.dart';
 @JsonSerializable()
 class PerformanceMetricsModel extends PerformanceMetrics {
   const PerformanceMetricsModel({
-    required super.cpuUsage,
-    required super.memoryUsage,
-    required super.networkTraffic,
-    required super.cpuHistory,
-    required super.memoryHistory,
+    super.cpuUsage,
+    super.memoryUsage,
+    super.networkTraffic,
+    super.cpuHistory,
+    super.memoryHistory,
   });
 
   factory PerformanceMetricsModel.fromJson(Map<String, dynamic> json) =>

@@ -9,14 +9,14 @@ part of 'performance_metrics_model.dart';
 PerformanceMetricsModel _$PerformanceMetricsModelFromJson(
   Map<String, dynamic> json,
 ) => PerformanceMetricsModel(
-  cpuUsage: (json['cpuUsage'] as num).toDouble(),
-  memoryUsage: (json['memoryUsage'] as num).toDouble(),
-  networkTraffic: (json['networkTraffic'] as num).toDouble(),
-  cpuHistory: (json['cpuHistory'] as List<dynamic>)
-      .map((e) => (e as num).toDouble())
+  cpuUsage: (json['cpuUsage'] as num?)?.toDouble(),
+  memoryUsage: (json['memoryUsage'] as num?)?.toDouble(),
+  networkTraffic: (json['networkTraffic'] as num?)?.toDouble(),
+  cpuHistory: (json['cpuHistory'] as List<dynamic>?)
+      ?.map((e) => (e as num).toDouble())
       .toList(),
-  memoryHistory: (json['memoryHistory'] as List<dynamic>)
-      .map((e) => (e as num).toDouble())
+  memoryHistory: (json['memoryHistory'] as List<dynamic>?)
+      ?.map((e) => (e as num).toDouble())
       .toList(),
 );
 

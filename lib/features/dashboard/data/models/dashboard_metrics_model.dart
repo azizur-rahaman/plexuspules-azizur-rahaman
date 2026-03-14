@@ -10,9 +10,9 @@ class DashboardMetricsModel extends DashboardMetrics {
     required super.onlineDevices,
     required super.offlineDevices,
     required super.alerts,
-    required super.cpuUsage,
-    required super.memoryUsage,
-    required super.networkTraffic,
+    super.cpuUsage,
+    super.memoryUsage,
+    super.networkTraffic,
     super.cpuHistory,
     super.memoryHistory,
   });

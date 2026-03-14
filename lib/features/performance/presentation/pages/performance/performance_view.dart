@@ -31,8 +31,8 @@ class PerformanceView extends StatelessWidget {
 
               if (state is PerformanceLoaded) {
                 final metrics = state.metrics;
-                final cpuHistory = metrics.cpuHistory;
-                final memoryHistory = metrics.memoryHistory;
+                final cpuHistory = metrics.cpuHistory ?? [];
+                final memoryHistory = metrics.memoryHistory ?? [];
 
                 return SingleChildScrollView(
                   padding: const EdgeInsets.all(24.0),
@@ -57,9 +57,9 @@ class PerformanceView extends StatelessWidget {
                       _buildChartCard(
                         context: context,
                         title: 'CPU USAGE',
-                        value: '${metrics.cpuUsage.toStringAsFixed(1)}%',
+                        value: metrics.cpuUsage != null ? '${metrics.cpuUsage!.toStringAsFixed(1)}%' : '—',
                         change: 'Average CPU',
-                        isPositive: metrics.cpuUsage < 80,
+                        isPositive: (metrics.cpuUsage ?? 0) < 80,
                         chartColor: Colors.blue,
                         spots: cpuHistory.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
                         maxY: 100,
@@ -69,9 +69,9 @@ class PerformanceView extends StatelessWidget {
                       _buildChartCard(
                         context: context,
                         title: 'MEMORY USAGE',
-                        value: '${metrics.memoryUsage.toStringAsFixed(1)}%',
+                        value: metrics.memoryUsage != null ? '${metrics.memoryUsage!.toStringAsFixed(1)}%' : '—',
                         change: 'Average Memory',
-                        isPositive: metrics.memoryUsage < 80,
+                        isPositive: (metrics.memoryUsage ?? 0) < 80,
                         chartColor: Colors.purple,
                         spots: memoryHistory.asMap().entries.map((e) => FlSpot(e.key.toDouble(), e.value)).toList(),
                         maxY: 100,

@@ -5,9 +5,9 @@ class DashboardMetrics extends Equatable {
   final int onlineDevices;
   final int offlineDevices;
   final int alerts;
-  final double cpuUsage;
-  final double memoryUsage;
-  final double networkTraffic;
+  final double? cpuUsage;
+  final double? memoryUsage;
+  final double? networkTraffic;
   final List<double>? cpuHistory;
   final List<double>? memoryHistory;
 
@@ -16,9 +16,9 @@ class DashboardMetrics extends Equatable {
     required this.onlineDevices,
     required this.offlineDevices,
     required this.alerts,
-    required this.cpuUsage,
-    required this.memoryUsage,
-    required this.networkTraffic,
+    this.cpuUsage,
+    this.memoryUsage,
+    this.networkTraffic,
     this.cpuHistory,
     this.memoryHistory,
   });

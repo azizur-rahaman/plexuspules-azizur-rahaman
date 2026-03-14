@@ -13,9 +13,9 @@ DashboardMetricsModel _$DashboardMetricsModelFromJson(
   onlineDevices: (json['onlineDevices'] as num).toInt(),
   offlineDevices: (json['offlineDevices'] as num).toInt(),
   alerts: (json['alerts'] as num).toInt(),
-  cpuUsage: (json['cpuUsage'] as num).toDouble(),
-  memoryUsage: (json['memoryUsage'] as num).toDouble(),
-  networkTraffic: (json['networkTraffic'] as num).toDouble(),
+  cpuUsage: (json['cpuUsage'] as num?)?.toDouble(),
+  memoryUsage: (json['memoryUsage'] as num?)?.toDouble(),
+  networkTraffic: (json['networkTraffic'] as num?)?.toDouble(),
   cpuHistory: (json['cpuHistory'] as List<dynamic>?)
       ?.map((e) => (e as num).toDouble())
       .toList(),
