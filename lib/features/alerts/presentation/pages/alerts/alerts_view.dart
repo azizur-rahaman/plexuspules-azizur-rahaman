@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +37,43 @@ class _AlertsViewState extends State<AlertsView> {
               }
 
               if (state is AlertsError) {
-                return Center(child: Text('Error: ${state.message}'));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline, size: 48.r, color: AppColors.critical),
+                      AppSizes.gap16,
+                      Text(
+                        'Failed to load alerts',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      AppSizes.gap8,
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: AppSizes.p32),
+                        child: Text(
+                          state.message,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppColors.textMuted,
+                              ),
+                        ),
+                      ),
+                      AppSizes.gap24,
+                      ElevatedButton(
+                        onPressed: () => context.read<AlertsBloc>().add(const FetchAlerts()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.p32,
+                            vertical: AppSizes.p12,
+                          ),
+                        ),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
               }
 
               if (state is AlertsLoaded) {
@@ -120,16 +157,26 @@ class _AlertsViewState extends State<AlertsView> {
                       ),
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
-                        itemCount: filteredAlerts.length,
-                        itemBuilder: (context, index) {
-                          return AlertCard(
-                            alert: filteredAlerts[index],
-                            onAcknowledge: () {},
-                            onViewDetails: () {},
-                          );
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          final completer = Completer<void>();
+                          context.read<AlertsBloc>().add(
+                                FetchAlerts(completer: completer),
+                              );
+                          return completer.future;
                         },
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.symmetric(horizontal: AppSizes.p20),
+                          itemCount: filteredAlerts.length,
+                          itemBuilder: (context, index) {
+                            return AlertCard(
+                              alert: filteredAlerts[index],
+                              onAcknowledge: () {},
+                              onViewDetails: () {},
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],

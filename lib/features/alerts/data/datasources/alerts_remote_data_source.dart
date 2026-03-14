@@ -18,7 +18,18 @@ class AlertsRemoteDataSourceImpl implements AlertsRemoteDataSource {
   Future<List<AlertModel>> getAlerts() async {
     try {
       final response = await _dioClient.get('/alerts');
-      return (response.data as List)
+      final dynamic data = response.data;
+      final List<dynamic> alertsList;
+      
+      if (data is List) {
+        alertsList = data;
+      } else if (data is Map<String, dynamic> && data['data'] is List) {
+        alertsList = data['data'] as List<dynamic>;
+      } else {
+        throw const FormatException('Unexpected response format');
+      }
+
+      return alertsList
           .map((json) => AlertModel.fromJson(json))
           .toList();
     } on DioException catch (e) {

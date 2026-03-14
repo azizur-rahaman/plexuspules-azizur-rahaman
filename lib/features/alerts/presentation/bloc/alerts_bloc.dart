@@ -35,8 +35,14 @@ class AlertsBloc extends Bloc<AlertsEvent, AlertsState> {
     final result = await _getAlerts();
 
     result.fold(
-      (failure) => emit(AlertsError(failure.message)),
-      (alerts) => emit(AlertsLoaded(alerts)),
+      (failure) {
+        emit(AlertsError(failure.message));
+        event.completer?.complete();
+      },
+      (alerts) {
+        emit(AlertsLoaded(alerts));
+        event.completer?.complete();
+      },
     );
   }
 

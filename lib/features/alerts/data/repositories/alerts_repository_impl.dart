@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/error/failures.dart';
-import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/alert.dart';
 import '../../domain/repositories/alerts_repository.dart';
 import '../datasources/alerts_remote_data_source.dart';
@@ -17,8 +16,8 @@ class AlertsRepositoryImpl implements AlertsRepository {
     try {
       final remoteAlerts = await remoteDataSource.getAlerts();
       return Right(remoteAlerts);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }
