@@ -1,6 +1,12 @@
 # PlexusPules - Real-Time Network Monitoring (NOC Simulator)
 
-PlexusPules is a premium, modern Flutter mobile application designed as a Network Operations Center (NOC) simulator. It provides real-time monitoring of network device health, performance metrics, and system alerts through a sleek, data-driven interface.
+## 🔗 Production Links
+
+*   **Mobile App Download**: [Download Android APK](https://www.dropbox.com/scl/fi/1mu12dbhxw9syx2f8368e/app-release.apk?rlkey=hruz0r2y9kke7z35wyqkpoc5x&st=3k1grj0x&dl=0)
+*   **Web Dashboard**: [https://plexus-pulse-dashboard.vercel.app/](https://plexus-pulse-dashboard.vercel.app/)
+*   **API Base URL**: `https://backend-plexuspules-azizur-rahaman.onrender.com/api`
+
+PlexusPules is a premium, modern Flutter mobile application designed as a Network Operations Center (NOC) simulator...
 
 ## 🚀 Features
 
