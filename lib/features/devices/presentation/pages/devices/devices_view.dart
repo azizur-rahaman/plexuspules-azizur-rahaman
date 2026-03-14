@@ -10,6 +10,8 @@ import 'package:plexuspules/features/devices/domain/entities/device.dart';
 import 'package:plexuspules/features/devices/presentation/bloc/devices_bloc.dart';
 import 'package:plexuspules/features/devices/presentation/bloc/devices_event.dart';
 import 'package:plexuspules/features/devices/presentation/bloc/devices_state.dart';
+import 'package:plexuspules/core/di/injection.dart';
+import 'package:plexuspules/core/services/push_notification_service.dart';
 
 class DevicesView extends StatefulWidget {
   const DevicesView({super.key});
@@ -25,6 +27,9 @@ class _DevicesViewState extends State<DevicesView> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    
+    // Ensure FCM token is registered with the backend
+    Future.microtask(() => getIt<PushNotificationService>().registerToken());
   }
 
   @override

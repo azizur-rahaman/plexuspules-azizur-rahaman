@@ -20,6 +20,8 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
   final GetDevices _getDevices;
 
+  Timer? _pollingTimer;
+
   DevicesBloc(this._getDevices) : super(const DevicesState()) {
     on<FetchDevices>(_onFetchDevices);
     on<LoadMoreDevices>(
@@ -31,6 +33,24 @@ class DevicesBloc extends Bloc<DevicesEvent, DevicesState> {
       _onSearchChanged,
       transformer: throttleDroppable(const Duration(milliseconds: 300)),
     );
+    
+    // Start polling every 10 seconds
+    _startPolling();
+  }
+
+  void _startPolling() {
+    _pollingTimer?.cancel();
+    _pollingTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      if (state.status == DevicesStatus.success) {
+        add(const FetchDevices());
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _pollingTimer?.cancel();
+    return super.close();
   }
 
   Future<void> _onFetchDevices(
